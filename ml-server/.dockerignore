@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+raw_crop_production.csv
+crop_data.csv
+*.zip

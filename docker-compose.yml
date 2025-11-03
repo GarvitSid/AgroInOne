@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:5000/api
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - agroinone-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - ML_SERVER_URL=http://ml:5001
+      - JWT_SECRET=supersecret
+      - NODE_ENV=production
+    depends_on:
+      ml:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/api/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - agroinone-network
+
+  ml:
+    build:
+      context: ./ml-server
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=production
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5001/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - agroinone-network
+
+networks:
+  agroinone-network:
+    driver: bridge

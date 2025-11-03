@@ -1,0 +1,95 @@
+# ========== Node.js ==========
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp
+.pnp.js
+.vite/
+.eslintcache
+
+# ========== Python & ML ==========
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+*.joblib
+*.pkl
+*.csv
+*.h5
+
+# ========== Database & Cache ==========
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# ========== Environment Variables ==========
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# ========== IDE & Editor ==========
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# ========== OS & System Files ==========
+.DS_Store
+Thumbs.db
+.gitkeep
+*.bak
+*.tmp
+
+# ========== Build & Dist Outputs ==========
+build/
+dist/
+out/
+coverage/
+.coverage
+frontend/build/
+frontend/dist/
+
+# ========== Logs & Debug ==========
+logs/
+*.log
+debug.log
+lerna-debug.log*
+
+# ========== Project Specific ==========
+repomix-output.md
+archive/
