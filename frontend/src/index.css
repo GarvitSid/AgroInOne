@@ -1,0 +1,115 @@
+/* helpdesk.css */
+
+/* Container for the cards */
+.helpdesk-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between cards */
+}
+
+/* Card styling */
+.help-card {
+    flex: 1 1 calc(30% - 20px); /* Increased width for cards, three cards per row */
+    box-sizing: border-box;
+    border: 1px solid #ddd; /* Add a border to cards */
+    border-radius: 5px; /* Rounded corners for cards */
+    background-color: #fff; /* White background for cards */
+    padding: 20px; /* Increased padding inside cards */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    min-height: 250px; /* Adjust the minimum height of the cards */
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .help-card {
+        flex: 1 1 calc(45% - 20px); /* Two cards per row on medium screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .help-card {
+        flex: 1 1 100%; /* One card per row on small screens */
+    }
+}
+
+
+/* Container styling */
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.container-max-width {
+  max-width: 1280px;
+}
+
+/* Loading spinner styling */
+.loading-spinner {
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Grid container styling */
+.grid-container {
+  padding: 25px;
+  height: 75vh;
+  overflow-y: auto;
+}
+
+/* Grid item styling for smaller cards */
+.grid-item {
+  padding: 10px; /* Reduce padding to make cards smaller */
+}
+
+/* Responsive adjustments for the grid items */
+@media (max-width: 600px) {
+  .grid-item {
+    width: 100%;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 960px) {
+  .grid-item {
+    width: 50%;
+  }
+}
+
+@media (min-width: 960px) {
+  .grid-item {
+    width: 33.33%;
+  }
+}
+
+/* Card styling */
+.card {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  padding: 15px; /* Reduce padding inside the card to make it smaller */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* Responsive text styling */
+p {
+  text-align: center;
+  font-size: 18px;
+}
+
+@media (min-width: 576px) {
+  p {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  p {
+    font-size: 22px;
+  }
+}
