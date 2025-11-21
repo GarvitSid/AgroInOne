@@ -1,0 +1,33 @@
+/* General Styles */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+content {
+    flex-grow: 1;
+}
+
+.form-container,
+.form-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.h1-pred-crop {
+    text-align: center;
+    color: #1e293b;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #334155;
+}
+
+@media (max-width: 576px) {
+    .form-card {
+        padding: 1rem !important;
+    }
+}
