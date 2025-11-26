@@ -1,0 +1,38 @@
+[
+  {
+    "Name": "Green Valley Agri Market",
+    "Owner": "Ramesh Kumar",
+    "Phone": "+91 98765 43210",
+    "Picture": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&q=80"
+  },
+  {
+    "Name": "Punjab Kisan Store",
+    "Owner": "Gurpreet Singh",
+    "Phone": "+91 97654 32109",
+    "Picture": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=80"
+  },
+  {
+    "Name": "Haryana Organic Hub",
+    "Owner": "Suresh Yadav",
+    "Phone": "+91 96543 21098",
+    "Picture": "https://images.unsplash.com/photo-1516594798947-e65505dbb29d?w=600&q=80"
+  },
+  {
+    "Name": "Mandi Fresh Produce",
+    "Owner": "Anjali Sharma",
+    "Phone": "+91 95432 10987",
+    "Picture": "https://images.unsplash.com/photo-1506617564039-2f3b650b7010?w=600&q=80"
+  },
+  {
+    "Name": "Deccan Agri Supplies",
+    "Owner": "Venkat Reddy",
+    "Phone": "+91 94321 09876",
+    "Picture": "https://images.unsplash.com/photo-1592982537447-6f2a6a0a7b8a?w=600&q=80"
+  },
+  {
+    "Name": "Bengal Rice Traders",
+    "Owner": "Subhash Chatterjee",
+    "Phone": "+91 93210 98765",
+    "Picture": "https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=600&q=80"
+  }
+]
