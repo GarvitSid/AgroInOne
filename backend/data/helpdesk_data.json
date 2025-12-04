@@ -1,0 +1,113 @@
+[
+    {
+      "id": 1,
+      "title": "Crop Insurance Support",
+      "description": "Assistance with understanding and applying for crop insurance schemes.",
+      "contact": {
+        "phone": "1800-123-4567",
+        "email": "cropinsurance@agrihelp.gov.in"
+      },
+      "links": "https://www.agrihelp.gov.in/crop-insurance",
+      "state": "All India"
+    },
+    {
+      "id": 2,
+      "title": "Subsidies for Fertilizers",
+      "description": "Information on subsidies available for purchasing fertilizers.",
+      "contact": {
+        "phone": "1800-234-5678",
+        "email": "fertilizers@agrihelp.gov.in"
+      },
+      "links": "https://www.agrihelp.gov.in/fertilizer-subsidies",
+      "state": "Punjab"
+    },
+    {
+      "id": 3,
+      "title": "Pest Control Solutions",
+      "description": "Guidance on effective pest control methods and resources.",
+      "contact": {
+        "phone": "1800-345-6789",
+        "email": "pestcontrol@agrihelp.gov.in"
+      },
+      "links": "https://www.agrihelp.gov.in/pest-control",
+      "state": "Delhi"
+    },
+    {
+      "id": 4,
+      "title": "Government Schemes for Farmers",
+      "description": "Overview of various government schemes available for farmers.",
+      "contact": {
+        "phone": "1800-456-7890",
+        "email": "schemes@agrihelp.gov.in"
+      },
+      "links": "https://www.agrihelp.gov.in/government-schemes",
+      "state": "Haryana"
+    },
+    {
+      "id": 5,
+      "title": "Soil Health Management",
+      "description": "Support and resources for managing soil health and fertility.",
+      "contact": {
+        "phone": "1800-567-8901",
+        "email": "soilhealth@agrihelp.gov.in"
+      },
+      "links": "https://www.agrihelp.gov.in/soil-health",
+      "state": "Odisha"
+    },
+    {
+      "id": 6,
+      "title": "Farm Machinery Assistance",
+      "description": "Information on subsidies and support for purchasing farm machinery.",
+      "contact": {
+        "phone": "1800-678-9012",
+        "email": "machinery@agrihelp.gov.in"
+      },
+      "links": "https://www.agrihelp.gov.in/farm-machinery",
+      "state": "Bihar"
+    },
+    {
+      "id": 7,
+      "title": "Water Management Techniques",
+      "description": "Guidance on efficient water management practices for agriculture.",
+      "contact": {
+        "phone": "1800-789-0123",
+        "email": "watermanagement@agrihelp.gov.in"
+      },
+      "links": "https://www.agrihelp.gov.in/water-management",
+      "state": "Jharkhand"
+    },
+    {
+      "id": 8,
+      "title": "Organic Farming Resources",
+      "description": "Resources and support for transitioning to organic farming practices.",
+      "contact": {
+        "phone": "1800-890-1234",
+        "email": "organicfarming@agrihelp.gov.in"
+      },
+      "links": "https://www.agrihelp.gov.in/organic-farming",
+      "state": "Himachal Pradesh"
+    },
+    {
+      "id": 9,
+      "title": "Drought Relief Measures",
+      "description": "Information on relief measures available during drought conditions.",
+      "contact": {
+        "phone": "1800-901-2345",
+        "email": "droughtrelief@agrihelp.gov.in"
+      },
+      "links": "https://www.agrihelp.gov.in/drought-relief",
+      "state": "Madhya Pradesh"
+    },
+    {
+      "id": 10,
+      "title": "Farmer Training Programs",
+      "description": "Details about training programs for improving farming skills and knowledge.",
+      "contact": {
+        "phone": "1800-012-3456",
+        "email": "training@agrihelp.gov.in"
+      },
+      "links": "https://www.agrihelp.gov.in/farmer-training",
+      "state": "Rajasthan"
+    }
+  ]
+  
