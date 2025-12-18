@@ -15,11 +15,11 @@ function CardLong() {
               Empowering Indian farmers with technology, clarity, and growth.
             </h1>
             <p className="hero-text fs-5 mb-0">
-              Explore a cleaner marketplace, practical AI predictions, and government scheme access in one modern, trustworthy experience.
+              Explore agricultural intelligence, practical AI predictions, and government scheme access in one modern, trustworthy experience.
             </p>
             <div className="hero-actions">
-              <Link to="/shop">
-                <Button variant="primary" size="lg">Explore Marketplace</Button>
+              <Link to="/schemes">
+                <Button variant="primary" size="lg">Explore Schemes</Button>
               </Link>
               <Link to="/predict">
                 <Button variant="outline-success" size="lg">Try Predictions</Button>

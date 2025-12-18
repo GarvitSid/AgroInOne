@@ -93,3 +93,4 @@ lerna-debug.log*
 # ========== Project Specific ==========
 repomix-output.md
 archive/
+docs/

@@ -20,9 +20,9 @@ function SecondCard() {
               <Card.Text className="card-below-text flex-grow-1 mb-4">
                 Welcome to AgroInOne — a focused, modern agriculture platform built to help farmers discover tools, opportunities, and support faster.
               </Card.Text>
-              <Link to="/shop">
+              <Link to="/schemes">
                 <Button size="lg" className="home-shop-button w-100" variant="primary">
-                  SHOP NOW
+                  EXPLORE SCHEMES
                 </Button>
               </Link>
             </Card.Body>
@@ -33,12 +33,12 @@ function SecondCard() {
           <Card className="feature-card h-100">
             <Card.Img variant="top" src={veggies} style={{ height: '12rem' }} />
             <Card.Body className="d-flex flex-column p-4">
-              <Card.Title className="text-center">MARKETPLACE</Card.Title>
+              <Card.Title className="text-center">AI PREDICTIONS</Card.Title>
               <Card.Text className="card-below-text feature-preview flex-grow-1">
-                Buy and sell farming products, from seeds and fertilizers to tools and daily essentials, in one easy marketplace.
+                Estimate crop yields and assess loan approvals with machine learning models built for agriculture.
               </Card.Text>
-              <Link to="/shop" className="mt-auto">
-                <Button variant="outline-success" className="w-100">Learn More</Button>
+              <Link to="/predict" className="mt-auto">
+                <Button variant="outline-success" className="w-100">Try Predictions</Button>
               </Link>
             </Card.Body>
           </Card>

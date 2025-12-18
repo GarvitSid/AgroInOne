@@ -32,7 +32,6 @@ function NavBar() {
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="ms-auto align-items-lg-center gap-lg-2 mt-3 mt-lg-0">
                 <Nav.Link as={Link} to="/">HOME</Nav.Link>
-                <Nav.Link as={Link} to="/shop">SHOP</Nav.Link>
                 <Nav.Link as={Link} to="/schemes">SCHEMES</Nav.Link>
                 <NavDropdown title="SERVICES" id="nav-services">
                   <NavDropdown.Item as={Link} to="/helpdesk">HELPDESK</NavDropdown.Item>
@@ -41,9 +40,6 @@ function NavBar() {
 
                 {user ? (
                   <NavDropdown title={user.name || 'Account'} id="nav-login">
-                    <NavDropdown.Item as={Link} to="/marketplace">MARKETPLACE</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/orders">MY ORDERS</NavDropdown.Item>
-                    <NavDropdown.Divider />
                     <NavDropdown.Item
                       onClick={() => {
                         logout();

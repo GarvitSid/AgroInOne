@@ -46,25 +46,6 @@ export const authService = {
     request('/auth/profile'),
 };
 
-export const productsService = {
-  getAll: () =>
-    request('/products'),
-  
-  getById: (id) =>
-    request(`/products/${id}`),
-};
-
-export const ordersService = {
-  create: (items, address, phone, deliveryDetails) =>
-    request('/orders', {
-      method: 'POST',
-      body: JSON.stringify({ items, address, phone, deliveryDetails }),
-    }),
-  
-  getMyOrders: () =>
-    request('/orders/my'),
-};
-
 export const schemesService = {
   getByState: (state) =>
     request(`/schemes?state=${encodeURIComponent(state)}`),
