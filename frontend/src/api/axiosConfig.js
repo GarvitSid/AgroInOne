@@ -21,8 +21,13 @@ async function request(path, options = {}) {
     : await response.text();
 
   if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.dispatchEvent(new Event('auth:unauthorized'));
+    }
     const error = new Error(data?.error || 'Request failed');
-    error.response = { data };
+    error.response = { data, status: response.status };
     throw error;
   }
 

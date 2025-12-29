@@ -37,14 +37,23 @@ const { supabase, seedSchemes, seedHelpdesk } = require('./db');
 const schemesData  = loadJsonArray('govt_schemes.json');
 const helpdeskData = loadJsonArray('helpdesk_data.json');
 
-async function bootDatabase() {
-  try {
-    console.log("Checking database seeds...");
-    await seedSchemes(schemesData);
-    await seedHelpdesk(helpdeskData);
-    console.log("Database check complete!");
-  } catch (err) {
-    console.error("Database seeding timeout/error:", err);
+async function bootDatabase(retries = 3, delay = 2000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      console.log(`Checking database seeds (attempt ${attempt}/${retries})...`);
+      await seedSchemes(schemesData);
+      await seedHelpdesk(helpdeskData);
+      console.log("Database check complete!");
+      return;
+    } catch (err) {
+      console.error(`Database seeding attempt ${attempt} failed:`, err.message || err);
+      if (attempt < retries) {
+        console.log(`Retrying in ${delay / 1000}s...`);
+        await new Promise((res) => setTimeout(res, delay));
+      } else {
+        console.warn("Database seeding could not complete; running with current state.");
+      }
+    }
   }
 }
 
@@ -114,7 +123,9 @@ app.post('/api/predict/crop', async (req, res) => {
     res.json(resp.data);
   } catch (err) {
     console.error('Error proxying crop predict:', err.message);
-    res.status(500).json({ error: 'prediction error', details: err.message });
+    const status = err.response ? err.response.status : 500;
+    const data = err.response ? err.response.data : { error: 'prediction error', details: err.message };
+    res.status(status).json(data);
   }
 });
 
@@ -126,7 +137,9 @@ app.post('/api/predict/loan', async (req, res) => {
     res.json(resp.data);
   } catch (err) {
     console.error('Error proxying loan predict:', err.message);
-    res.status(500).json({ error: 'prediction error', details: err.message });
+    const status = err.response ? err.response.status : 500;
+    const data = err.response ? err.response.data : { error: 'prediction error', details: err.message };
+    res.status(status).json(data);
   }
 });
 

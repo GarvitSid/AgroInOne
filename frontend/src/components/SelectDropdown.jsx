@@ -45,13 +45,16 @@ export default function SelectDropdown() {
     return Array.from(s).sort();
   }, [schemes]);
 
-  // Memoized filtered data based on selected state
+  // Memoized filtered data based on selected state (always includes All India schemes)
   const schemeData = useMemo(() => {
     const selected = (selectedState || '').trim().toLowerCase();
-    if (!selectedState || selectedState === 'All India') {
+    if (!selectedState || selected === 'all india') {
       return schemes.filter((item) => (item.State || '').toLowerCase() === 'all india');
     }
-    return schemes.filter((item) => (item.State || '').toLowerCase() === selected);
+    return schemes.filter((item) => {
+      const stateStr = (item.State || '').toLowerCase();
+      return stateStr === selected || stateStr === 'all india';
+    });
   }, [schemes, selectedState]);
 
   const handleChange = (event) => {

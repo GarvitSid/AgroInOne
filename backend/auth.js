@@ -6,28 +6,34 @@ const { supabase } = require('./db');
 
 let JWT_SECRET = process.env.JWT_SECRET;
 
-if (process.env.NODE_ENV === 'production') {
-  if (!JWT_SECRET || JWT_SECRET === 'dev-secret') {
-    console.error('FATAL ERROR: JWT_SECRET environment variable is missing or insecure in production!');
-    process.exit(1); // Refuse to start with a weak secret
+if (!JWT_SECRET || JWT_SECRET === 'dev-secret' || JWT_SECRET.length < 16) {
+  if (process.env.NODE_ENV === 'production') {
+    console.error('FATAL ERROR: JWT_SECRET environment variable is missing, insecure, or too short in production!');
+    process.exit(1);
+  } else {
+    JWT_SECRET = JWT_SECRET || 'dev-secret-agroinone-secure-local';
   }
-} else {
-  // Safe fallback for local development only
-  JWT_SECRET = JWT_SECRET || 'dev-secret';
 }
 
 router.post('/register', async (req, res) => {
   const { name, email, phone, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'email and password required' });
+  if (!email || !password) return res.status(400).json({ error: 'Email and password are required' });
+  if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
+
   const hashed = bcrypt.hashSync(password, 8);
   
   const { data, error } = await supabase
     .from('users')
-    .insert([{ name: name || '', email, phone: phone || '', password: hashed }])
+    .insert([{ name: name || '', email: email.trim().toLowerCase(), phone: phone || '', password: hashed }])
     .select()
     .single();
 
-  if (error) return res.status(400).json({ error: error.message });
+  if (error) {
+    if (error.code === '23505' || (error.message && error.message.includes('unique'))) {
+      return res.status(409).json({ error: 'An account with this email already exists.' });
+    }
+    return res.status(400).json({ error: 'Registration failed. Please check your details.' });
+  }
   const user = { id: data.id, name, email };
   const token = jwt.sign(user, JWT_SECRET, { expiresIn: '7d' });
   res.json({ user, token });

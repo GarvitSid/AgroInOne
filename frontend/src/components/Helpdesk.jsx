@@ -64,6 +64,8 @@ export default function Helpdesk() {
             <div className="col">
               <div className="search-1">
                 <input
+                  id="helpdesk-search"
+                  aria-label="Search helpdesk knowledge base"
                   onChange={handleChange}
                   type="text"
                   placeholder="Search knowledge base..."

@@ -44,26 +44,46 @@ def predict_crop():
         data = request.get_json() or {}
 
         # 1. Extract and sanitize: .strip().title() matches the clean_data.py format
-        raw_state   = str(data.get('selected_state',    '')).strip().title()
+        raw_state    = str(data.get('selected_state',    '')).strip().title()
         raw_district = str(data.get('selected_district', '')).strip().title()
-        raw_crop    = str(data.get('selected_crop',     '')).strip().title()
-        raw_season  = str(data.get('selected_season',   '')).strip().title()
-        year        = int(data.get('crop_year', 2024))
-        area        = float(data.get('area', 0) or 0)
+        raw_crop     = str(data.get('selected_crop',     '')).strip().title()
+        raw_season   = str(data.get('selected_season',   '')).strip().title()
+        year         = int(data.get('crop_year', 2024))
+        area         = float(data.get('area', 0) or 0)
 
-        # 2. Safe encoder: fall back to class 0 for unseen labels
-        def encode_safe(encoder_name, value):
-            try:
-                return crop_encoders[encoder_name].transform([value])[0]
-            except ValueError:
-                return 0
+        # Validation: Area must be positive
+        if area <= 0:
+            return jsonify({'error': 'Area must be a positive number greater than 0.'}), 400
+
+        # 2. Strict encoder: reject unseen categories with 400 Bad Request
+        def encode_strict(encoder_name, value):
+            encoder = crop_encoders.get(encoder_name)
+            if encoder is None or value not in encoder.classes_:
+                return None
+            return encoder.transform([value])[0]
+
+        encoded_state    = encode_strict('State', raw_state)
+        encoded_district = encode_strict('District', raw_district)
+        encoded_crop     = encode_strict('Crop', raw_crop)
+        encoded_season   = encode_strict('Season', raw_season)
+
+        missing = []
+        if encoded_state is None:    missing.append(f"State '{raw_state}'")
+        if encoded_district is None: missing.append(f"District '{raw_district}'")
+        if encoded_crop is None:     missing.append(f"Crop '{raw_crop}'")
+        if encoded_season is None:   missing.append(f"Season '{raw_season}'")
+
+        if missing:
+            return jsonify({
+                'error': f"Unsupported options: {', '.join(missing)}. Please select valid options from the provided lists."
+            }), 400
 
         encoded_data = [[
-            encode_safe('State',    raw_state),
-            encode_safe('District', raw_district),
-            encode_safe('Crop',     raw_crop),
+            encoded_state,
+            encoded_district,
+            encoded_crop,
             year,
-            encode_safe('Season',   raw_season),
+            encoded_season,
             area,
         ]]
 
@@ -98,6 +118,15 @@ def predict_loan():
     try:
         data = request.get_json() or {}
 
+        # Validate positive numeric inputs
+        income      = float(data.get('income', 0) or 0)
+        coap_income = float(data.get('coap_income', 0) or 0)
+        loan_amount = float(data.get('loan_amount', 0) or 0)
+        loan_term   = float(data.get('loan_term', 0) or 0)
+
+        if loan_amount <= 0 or loan_term <= 0 or income <= 0:
+            return jsonify({'error': 'Income, loan amount, and loan term must be positive numbers.'}), 400
+
         # Safe encoder: fall back to class 0 for unseen labels
         def encode_safe(encoder_name, value):
             try:
@@ -105,17 +134,16 @@ def predict_loan():
             except ValueError:
                 return 0
 
-        # 'or 0' guards against empty-string values from React <Form.Control type="number">
         encoded_data = [[
             encode_safe('gender',         data.get('gender',         '')),
             encode_safe('married',        data.get('married',        '')),
             encode_safe('dependent',      str(data.get('dependent',  '0'))),
             encode_safe('education',      data.get('education',      '')),
             encode_safe('self_emp',       data.get('self_emp',       '')),
-            float(data.get('income',      0) or 0),
-            float(data.get('coap_income', 0) or 0),
-            float(data.get('loan_amount', 0) or 0),
-            float(data.get('loan_term',   0) or 0),
+            income,
+            coap_income,
+            loan_amount,
+            loan_term,
             encode_safe('credit_history', data.get('credit_history', '')),
             encode_safe('prop_area',      data.get('prop_area',      '')),
         ]]
