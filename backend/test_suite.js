@@ -125,7 +125,7 @@ async function runTests() {
       name: 'Automated Test User',
       email: testEmail,
       phone: '9876543210',
-      password: 'testPassword123'
+      password: 'TestPassword123!'
     });
     assert.strictEqual(res.status, 200);
     assert.ok(res.data.token, 'Expected JWT token');
@@ -189,20 +189,75 @@ async function runTests() {
     }
   });
 
-  await test('POST /api/auth/login with valid credentials succeeds and accesses protected /api/me', async () => {
+  await test('POST /api/auth/login with wrong password rejects with 401 Unauthorized', async () => {
+    try {
+      await axios.post(`${BASE_URL}/auth/login`, {
+        email: testEmail,
+        password: 'wrongPassword999!'
+      });
+      assert.fail('Should have rejected incorrect password');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 401);
+      assert.strictEqual(err.response.data?.error, 'Invalid email or password');
+    }
+  });
+
+  await test('POST /api/auth/login with non-existent email rejects with 401 Unauthorized', async () => {
+    try {
+      await axios.post(`${BASE_URL}/auth/login`, {
+        email: `nonexistent_${Date.now()}@example.com`,
+        password: 'ValidPassword123!'
+      });
+      assert.fail('Should have rejected non-existent user');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 401);
+      assert.strictEqual(err.response.data?.error, 'Invalid email or password');
+    }
+  });
+
+  let validAuthToken = '';
+
+  await test('POST /api/auth/login with valid credentials succeeds and returns JWT', async () => {
     const loginRes = await axios.post(`${BASE_URL}/auth/login`, {
       email: testEmail,
-      password: 'testPassword123'
+      password: 'TestPassword123!'
     });
     assert.strictEqual(loginRes.status, 200);
-    const token = loginRes.data.token;
-    assert.ok(token);
+    validAuthToken = loginRes.data.token;
+    assert.ok(validAuthToken, 'Expected JWT token from login');
+    assert.strictEqual(loginRes.data.user.email, testEmail);
+  });
 
-    const meRes = await axios.get(`${BASE_URL}/me`, {
-      headers: { Authorization: `Bearer ${token}` }
+  await test('GET /api/auth/profile with valid token returns fresh user profile without password', async () => {
+    const profileRes = await axios.get(`${BASE_URL}/auth/profile`, {
+      headers: { Authorization: `Bearer ${validAuthToken}` }
     });
-    assert.strictEqual(meRes.status, 200);
-    assert.strictEqual(meRes.data.user.email, testEmail);
+    assert.strictEqual(profileRes.status, 200);
+    assert.strictEqual(profileRes.data.user.email, testEmail);
+    assert.strictEqual(profileRes.data.user.password, undefined, 'Profile response MUST NOT leak hashed password');
+    assert.ok(profileRes.data.user.id);
+  });
+
+  await test('GET /api/auth/profile without token rejects with 401 Unauthorized', async () => {
+    try {
+      await axios.get(`${BASE_URL}/auth/profile`);
+      assert.fail('Should have rejected request missing Authorization header');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 401);
+      assert.strictEqual(err.response.data?.error, 'Authorization header is missing');
+    }
+  });
+
+  await test('GET /api/auth/profile with corrupted token rejects with 401 and INVALID_TOKEN code', async () => {
+    try {
+      await axios.get(`${BASE_URL}/auth/profile`, {
+        headers: { Authorization: `Bearer invalid.tampered.signature` }
+      });
+      assert.fail('Should have rejected corrupted token');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 401);
+      assert.strictEqual(err.response.data?.code, 'INVALID_TOKEN');
+    }
   });
 
   // Summary

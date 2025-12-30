@@ -9,6 +9,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Critical environment variable audit & validation
+const REQUIRED_ENV_VARS = ['SUPABASE_URL', 'SUPABASE_KEY', 'JWT_SECRET'];
+const missingVars = REQUIRED_ENV_VARS.filter(v => !process.env[v] || process.env[v].trim() === '');
+
+if (missingVars.length > 0) {
+  console.error(`\n❌ FATAL CONFIGURATION ERROR: Missing required environment variable(s): ${missingVars.join(', ')}`);
+  console.error(`   Please check your .env file or deployment secret configuration.\n`);
+  process.exit(1);
+}
+
 // Serve static frontend build files
 const FRONTEND_BUILD_PATH = path.join(__dirname, '..', 'frontend', 'dist');
 app.use(express.static(FRONTEND_BUILD_PATH));

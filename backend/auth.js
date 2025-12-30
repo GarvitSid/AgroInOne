@@ -4,15 +4,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { supabase } = require('./db');
 
-let JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
 
-if (!JWT_SECRET || JWT_SECRET === 'dev-secret' || JWT_SECRET.length < 16) {
-  if (process.env.NODE_ENV === 'production') {
-    console.error('FATAL ERROR: JWT_SECRET environment variable is missing, insecure, or too short in production!');
-    process.exit(1);
-  } else {
-    JWT_SECRET = JWT_SECRET || 'dev-secret-agroinone-secure-local';
-  }
+if (!JWT_SECRET || JWT_SECRET.length < 16) {
+  console.error('FATAL: JWT_SECRET environment variable is missing, undefined, or shorter than 16 characters.');
+  process.exit(1);
 }
 
 // RFC 5322 compliant email regex pattern
@@ -83,36 +79,94 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'email and password required' });
   
-  const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('email', email)
-    .single();
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
 
-  if (error || !data) return res.status(401).json({ error: 'invalid credentials' });
-  if (!bcrypt.compareSync(password, data.password)) return res.status(401).json({ error: 'invalid credentials' });
+  const normalizedEmail = email.trim().toLowerCase();
 
-  const user = { id: data.id, name: data.name, email: data.email };
-  const token = jwt.sign(user, JWT_SECRET, { expiresIn: '7d' });
-  res.json({ user, token });
+  try {
+    const { data: userRecord, error } = await supabase
+      .from('users')
+      .select('id, name, email, phone, password')
+      .eq('email', normalizedEmail)
+      .single();
+
+    if (error || !userRecord) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Asynchronous bcrypt comparison (constant time)
+    const isMatch = await bcrypt.compare(password, userRecord.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    const user = {
+      id: userRecord.id,
+      name: userRecord.name,
+      email: userRecord.email,
+      phone: userRecord.phone
+    };
+
+    const token = jwt.sign(user, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ user, token });
+  } catch (err) {
+    console.error('Login authentication error:', err.message);
+    res.status(500).json({ error: 'Internal server error during login' });
+  }
 });
 
-router.get('/profile', authMiddleware, (req, res) => {
-  res.json({ user: req.user });
+// Authenticated user profile retrieval (fresh from database)
+router.get('/profile', authMiddleware, async (req, res) => {
+  try {
+    const { data: userRecord, error } = await supabase
+      .from('users')
+      .select('id, name, email, phone')
+      .eq('id', req.user.id)
+      .single();
+
+    if (error || !userRecord) {
+      return res.status(404).json({ error: 'User profile not found' });
+    }
+
+    res.json({ user: userRecord });
+  } catch (err) {
+    console.error('Profile retrieval error:', err.message);
+    res.status(500).json({ error: 'Failed to retrieve profile' });
+  }
 });
 
 function authMiddleware(req, res, next) {
-  const auth = req.headers.authorization;
-  if (!auth) return res.status(401).json({ error: 'missing token' });
-  const token = auth.split(' ')[1];
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ error: 'Authorization header is missing' });
+  }
+
+  const parts = authHeader.split(' ');
+  if (parts.length !== 2 || parts[0].toLowerCase() !== 'bearer') {
+    return res.status(401).json({ error: 'Invalid token format. Expected "Bearer <token>"' });
+  }
+
+  const token = parts[1];
+
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
-  } catch (e) {
-    return res.status(401).json({ error: 'invalid token' });
+  } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        error: 'Your session has expired. Please log in again.',
+        code: 'TOKEN_EXPIRED',
+        expiredAt: err.expiredAt
+      });
+    }
+    return res.status(401).json({
+      error: 'Invalid or corrupted authentication token',
+      code: 'INVALID_TOKEN'
+    });
   }
 }
 
