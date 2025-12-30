@@ -15,28 +15,70 @@ if (!JWT_SECRET || JWT_SECRET === 'dev-secret' || JWT_SECRET.length < 16) {
   }
 }
 
+// RFC 5322 compliant email regex pattern
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+
 router.post('/register', async (req, res) => {
   const { name, email, phone, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Email and password are required' });
-  if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
 
-  const hashed = bcrypt.hashSync(password, 8);
-  
-  const { data, error } = await supabase
-    .from('users')
-    .insert([{ name: name || '', email: email.trim().toLowerCase(), phone: phone || '', password: hashed }])
-    .select()
-    .single();
-
-  if (error) {
-    if (error.code === '23505' || (error.message && error.message.includes('unique'))) {
-      return res.status(409).json({ error: 'An account with this email already exists.' });
-    }
-    return res.status(400).json({ error: 'Registration failed. Please check your details.' });
+  // 1. Mandatory fields presence check
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
   }
-  const user = { id: data.id, name, email };
-  const token = jwt.sign(user, JWT_SECRET, { expiresIn: '7d' });
-  res.json({ user, token });
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  // 2. Email format validation
+  if (!EMAIL_REGEX.test(normalizedEmail)) {
+    return res.status(400).json({ error: 'Please enter a valid email address' });
+  }
+
+  // 3. Password complexity enforcement (min 8 chars, at least one number or special char)
+  if (password.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+  }
+  if (!/(?=.*[0-9])|(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(password)) {
+    return res.status(400).json({ error: 'Password must contain at least one number or special character' });
+  }
+
+  // 4. Phone number sanitization (optional, but if provided, validate 10 digits)
+  let cleanPhone = '';
+  if (phone) {
+    cleanPhone = phone.toString().trim().replace(/[\s-]/g, '');
+    if (!/^\+?[0-9]{10,13}$/.test(cleanPhone)) {
+      return res.status(400).json({ error: 'Please enter a valid 10-digit mobile number' });
+    }
+  }
+
+  // 5. Asynchronous bcrypt hashing (salt rounds: 10)
+  try {
+    const hashed = await bcrypt.hash(password, 10);
+
+    const { data, error } = await supabase
+      .from('users')
+      .insert([{
+        name: (name || '').trim(),
+        email: normalizedEmail,
+        phone: cleanPhone,
+        password: hashed
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      if (error.code === '23505' || (error.message && error.message.includes('unique'))) {
+        return res.status(409).json({ error: 'An account with this email already exists.' });
+      }
+      return res.status(400).json({ error: 'Registration failed. Please check your details.' });
+    }
+
+    const user = { id: data.id, name: data.name, email: data.email, phone: data.phone };
+    const token = jwt.sign(user, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ user, token });
+  } catch (err) {
+    console.error('Registration hashing or insertion error:', err.message);
+    res.status(500).json({ error: 'Internal server error during registration' });
+  }
 });
 
 router.post('/login', async (req, res) => {

@@ -1,8 +1,8 @@
 const assert = require('assert');
 const axios = require('axios');
 
-const BASE_URL = process.env.TEST_API_URL || 'http://localhost:5000/api';
-const ML_URL = process.env.TEST_ML_URL || 'http://localhost:5001';
+const BASE_URL = process.env.TEST_API_URL || 'http://127.0.0.1:5000/api';
+const ML_URL = process.env.TEST_ML_URL || 'http://127.0.0.1:5001';
 
 async function runTests() {
   console.log('🧪 Starting AgroInOne Baseline Automated Test Suite...\n');
@@ -130,6 +130,48 @@ async function runTests() {
     assert.strictEqual(res.status, 200);
     assert.ok(res.data.token, 'Expected JWT token');
     assert.strictEqual(res.data.user.email, testEmail);
+  });
+
+  await test('POST /api/auth/register with invalid email rejects with 400 Bad Request', async () => {
+    try {
+      await axios.post(`${BASE_URL}/auth/register`, {
+        name: 'Invalid Email User',
+        email: 'invalid-email-format',
+        password: 'ValidPassword123!'
+      });
+      assert.fail('Should have rejected invalid email format');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 400);
+      assert.strictEqual(err.response.data?.error, 'Please enter a valid email address');
+    }
+  });
+
+  await test('POST /api/auth/register with short password (<8 chars) rejects with 400 Bad Request', async () => {
+    try {
+      await axios.post(`${BASE_URL}/auth/register`, {
+        name: 'Short Password User',
+        email: `short_pw_${Date.now()}@example.com`,
+        password: 'short'
+      });
+      assert.fail('Should have rejected password under 8 characters');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 400);
+      assert.strictEqual(err.response.data?.error, 'Password must be at least 8 characters long');
+    }
+  });
+
+  await test('POST /api/auth/register with no number/special char password rejects with 400 Bad Request', async () => {
+    try {
+      await axios.post(`${BASE_URL}/auth/register`, {
+        name: 'Simple Password User',
+        email: `simple_pw_${Date.now()}@example.com`,
+        password: 'onlylettersnopunct'
+      });
+      assert.fail('Should have rejected password without numbers or special chars');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 400);
+      assert.strictEqual(err.response.data?.error, 'Password must contain at least one number or special character');
+    }
   });
 
   await test('POST /api/auth/register with duplicate email returns sanitized 409 Conflict (L002 fix)', async () => {
