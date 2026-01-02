@@ -11,6 +11,8 @@ import Helpdesk from "./routes/Helpdesk";
 import Predict from "./routes/Predict";
 import PredictCrop from "./routes/PredictCrop";
 import Predictloan from "./routes/Predictloan";
+import Profile from "./routes/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
 
 function App() {
@@ -25,6 +27,14 @@ function App() {
             <Route exact path="/predict" element={<Predict />} />
             <Route exact path="/predict/crop" element={<PredictCrop />} />
             <Route exact path="/predict/loan" element={<Predictloan />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
         <Footer />

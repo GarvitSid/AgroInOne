@@ -40,6 +40,10 @@ function NavBar() {
 
                 {user ? (
                   <NavDropdown title={user.name || 'Account'} id="nav-login">
+                    <NavDropdown.Item as={Link} to="/profile">
+                      MY PROFILE
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
                     <NavDropdown.Item
                       onClick={() => {
                         logout();
