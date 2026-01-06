@@ -22,11 +22,21 @@ async function request(path, options = {}) {
 
   if (!response.ok) {
     if (response.status === 401) {
+      // Clear client storage
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.dispatchEvent(new Event('auth:unauthorized'));
+
+      // Extract specific error details sent by backend (e.g. TOKEN_EXPIRED or INVALID_TOKEN)
+      const reason = data?.error || 'Your session has expired. Please log in again.';
+      const code = data?.code || 'UNAUTHORIZED';
+
+      // Dispatch event with detail payload
+      window.dispatchEvent(new CustomEvent('auth:unauthorized', {
+        detail: { reason, code }
+      }));
     }
-    const error = new Error(data?.error || 'Request failed');
+
+    const error = new Error(data?.error || `Request failed with status ${response.status}`);
     error.response = { data, status: response.status };
     throw error;
   }

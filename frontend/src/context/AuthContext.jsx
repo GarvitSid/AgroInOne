@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 export const AuthContext = createContext();
 
@@ -20,8 +21,15 @@ export function AuthProvider({ children }) {
     }
     setLoading(false);
 
-    const handleUnauthorized = () => {
+    const handleUnauthorized = (event) => {
       setUser(null);
+      const reason = event?.detail?.reason || 'Your session has expired. Please log in again.';
+      // Display friendly session expiration alert
+      toast.warn(reason, {
+        toastId: 'session-expired-alert', // Prevent duplicate toast cascades
+        position: 'top-center',
+        autoClose: 4000
+      });
     };
 
     window.addEventListener('auth:unauthorized', handleUnauthorized);
