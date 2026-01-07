@@ -119,4 +119,5 @@ jobs:
         env:
           TEST_API_URL: http://localhost:5000/api
           TEST_ML_URL: http://localhost:5001
+          JWT_SECRET: ci-test-secret-key-agroinone-32chars-min
         run: npm test
