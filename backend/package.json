@@ -1,6 +1,6 @@
 {
   "name": "agroinone-backend",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -9,16 +9,16 @@
     "test": "node test_suite.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.109.0",
-    "axios": "^1.4.0",
+    "@supabase/supabase-js": "^2.89.0",
+    "axios": "^1.13.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "dotenv": "^17.4.2",
-    "express": "^4.18.2",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.0",
-    "ws": "^8.21.0"
+    "ws": "^8.19.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.1.11"
   }
 }
