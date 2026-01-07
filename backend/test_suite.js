@@ -248,6 +248,18 @@ async function runTests() {
     }
   });
 
+  await test('GET /api/auth/profile with malformed header (no Bearer prefix) rejects with 401 Unauthorized', async () => {
+    try {
+      await axios.get(`${BASE_URL}/auth/profile`, {
+        headers: { Authorization: validAuthToken }
+      });
+      assert.fail('Should have rejected header missing Bearer prefix');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 401);
+      assert.strictEqual(err.response.data?.error, 'Invalid token format. Expected "Bearer <token>"');
+    }
+  });
+
   await test('GET /api/auth/profile with corrupted token rejects with 401 and INVALID_TOKEN code', async () => {
     try {
       await axios.get(`${BASE_URL}/auth/profile`, {
@@ -257,6 +269,29 @@ async function runTests() {
     } catch (err) {
       assert.strictEqual(err.response?.status, 401);
       assert.strictEqual(err.response.data?.code, 'INVALID_TOKEN');
+    }
+  });
+
+  await test('GET /api/auth/profile with expired token rejects with 401 and TOKEN_EXPIRED code', async () => {
+    const jwt = require('jsonwebtoken');
+    const secret = process.env.JWT_SECRET || 'dev-secret-key-agro-in-one';
+    // Generate token expired 10 minutes ago
+    const expiredToken = jwt.sign(
+      { id: 9999, email: 'expired@example.com' },
+      secret,
+      { expiresIn: '-10m' }
+    );
+
+    try {
+      await axios.get(`${BASE_URL}/auth/profile`, {
+        headers: { Authorization: `Bearer ${expiredToken}` }
+      });
+      assert.fail('Should have rejected expired token');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 401);
+      assert.strictEqual(err.response.data?.code, 'TOKEN_EXPIRED');
+      assert.strictEqual(err.response.data?.error, 'Your session has expired. Please log in again.');
+      assert.ok(err.response.data?.expiredAt);
     }
   });
 
