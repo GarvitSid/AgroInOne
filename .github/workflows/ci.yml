@@ -97,9 +97,9 @@ jobs:
       - name: Start ML Service in Background
         working-directory: ml-server
         run: |
-          python app.py &
+          nohup python app.py > /tmp/ml-server.log 2>&1 &
           sleep 4
-          curl -f http://localhost:5001/health || exit 1
+          curl -f http://localhost:5001/health || (cat /tmp/ml-server.log && exit 1)
 
       - name: Start Express Backend in Background
         working-directory: backend
@@ -110,9 +110,9 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY || '' }}
         run: |
-          node index.js &
+          nohup node index.js > /tmp/backend.log 2>&1 &
           sleep 4
-          curl -f http://localhost:5000/health || exit 1
+          curl -f http://localhost:5000/health || (cat /tmp/backend.log && exit 1)
 
       - name: Execute Automated Integration Test Suite
         working-directory: backend
