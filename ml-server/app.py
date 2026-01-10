@@ -29,7 +29,87 @@ try:
     print("Loan AI model loaded successfully.")
 except Exception as e:
     print("Warning: Loan models not found. Run train_loan_model.py first.", e)
-    loan_model, loan_encoders = None, None
+# ---------------------------------------------------------------------------
+# Load Crop Recommender (Random Forest Classifier - Model 1)
+# ---------------------------------------------------------------------------
+try:
+    crop_recommender = joblib.load(os.path.join(MODEL_DIR, 'crop_recommender_v1.joblib'))
+    crop_recommender_meta = joblib.load(os.path.join(MODEL_DIR, 'crop_recommender_meta.joblib'))
+    print("Crop Recommender model loaded successfully.")
+except Exception as e:
+    print("Warning: Crop recommender model not found. Run train_crop_recommender.py first.", e)
+    crop_recommender, crop_recommender_meta = None, None
+
+# ---------------------------------------------------------------------------
+# /predict/recommend — Random Forest Classifier (Model 1)
+# ---------------------------------------------------------------------------
+@app.route('/predict/recommend', methods=['POST'])
+def predict_recommend():
+    if crop_recommender is None:
+        return jsonify({'error': 'Crop recommender model not initialized on server'}), 500
+
+    try:
+        data = request.get_json() or {}
+
+        def parse_float(key, aliases=[]):
+            val = data.get(key)
+            if val is None:
+                for a in aliases:
+                    if a in data:
+                        val = data[a]
+                        break
+            if val is None or str(val).strip() == '':
+                raise ValueError(f"Missing required parameter '{key}'.")
+            try:
+                return float(val)
+            except (ValueError, TypeError):
+                raise ValueError(f"Parameter '{key}' must be a valid numeric value.")
+
+        n = parse_float('N', ['nitrogen', 'n'])
+        p = parse_float('P', ['phosphorus', 'p'])
+        k = parse_float('K', ['potassium', 'k'])
+        temp = parse_float('temperature', ['temp'])
+        humidity = parse_float('humidity')
+        ph = parse_float('ph', ['pH'])
+        rainfall = parse_float('rainfall', ['rain'])
+
+        # Boundary checks
+        if n < 0 or p < 0 or k < 0:
+            return jsonify({'error': 'Nutrient metrics (N, P, K) must be non-negative.'}), 400
+        if not (0.0 <= ph <= 14.0):
+            return jsonify({'error': 'Soil pH must be between 0.0 and 14.0.'}), 400
+        if humidity < 0 or humidity > 100:
+            return jsonify({'error': 'Relative humidity must be between 0% and 100%.'}), 400
+        if rainfall < 0:
+            return jsonify({'error': 'Rainfall must be a non-negative number.'}), 400
+
+        input_df = pd.DataFrame([[n, p, k, temp, humidity, ph, rainfall]],
+                                columns=['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall'])
+
+        predicted_crop = crop_recommender.predict(input_df)[0]
+        proba = crop_recommender.predict_proba(input_df)[0]
+        max_idx = crop_recommender.classes_.tolist().index(predicted_crop)
+        confidence = round(float(proba[max_idx]), 4)
+
+        return jsonify({
+            'recommended_crop': str(predicted_crop),
+            'confidence': confidence,
+            'input_metrics': {
+                'N': n,
+                'P': p,
+                'K': k,
+                'temperature': temp,
+                'humidity': humidity,
+                'ph': ph,
+                'rainfall': rainfall
+            }
+        })
+
+    except ValueError as ve:
+        return jsonify({'error': str(ve)}), 400
+    except Exception as e:
+        print("Crop Recommendation Error:", str(e))
+        return jsonify({'error': f"Failed to compute crop recommendation: {str(e)}"}), 500
 
 
 # ---------------------------------------------------------------------------
