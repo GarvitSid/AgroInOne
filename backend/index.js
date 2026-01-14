@@ -139,6 +139,20 @@ app.post('/api/predict/crop', async (req, res) => {
   }
 });
 
+app.post('/api/predict/recommend', async (req, res) => {
+  try {
+    const resp = await axios.post(`${ML_SERVER}/predict/recommend`, req.body, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    res.json(resp.data);
+  } catch (err) {
+    console.error('Error proxying crop recommend:', err.message);
+    const status = err.response ? err.response.status : 500;
+    const data = err.response ? err.response.data : { error: 'recommendation error', details: err.message };
+    res.status(status).json(data);
+  }
+});
+
 app.post('/api/predict/loan', async (req, res) => {
   try {
     const resp = await axios.post(`${ML_SERVER}/predict/loan`, req.body, {

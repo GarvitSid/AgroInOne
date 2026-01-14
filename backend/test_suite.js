@@ -70,7 +70,93 @@ async function runTests() {
     assert.ok(res.data.state.length > 0);
   });
 
-  await test('POST /api/predict/crop with valid inputs calculates yield', async () => {
+  await test('POST /api/predict/crop with 11-parameter payload executes two-stage pipeline and returns dual advisory', async () => {
+    const res = await axios.post(`${BASE_URL}/predict/crop`, {
+      N: 90,
+      P: 42,
+      K: 43,
+      temperature: 20.88,
+      humidity: 82.0,
+      ph: 6.5,
+      rainfall: 202.94,
+      selected_state: 'Punjab',
+      selected_district: 'Ludhiana',
+      selected_season: 'Kharif',
+      crop_year: 2020,
+      area: 10
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.data.recommended_crop, 'Rice');
+    assert.ok(typeof res.data.yield_tonnes_per_hectare === 'number', 'Expected numeric yield_tonnes_per_hectare');
+    assert.ok(res.data.yield_tonnes_per_hectare > 0, 'Expected positive yield');
+    assert.ok(typeof res.data.production_tonnes === 'number', 'Expected numeric production_tonnes');
+    assert.ok(typeof res.data.confidence === 'number' && res.data.confidence > 0, 'Expected positive confidence score');
+    assert.strictEqual(res.data.answer, res.data.yield_tonnes_per_hectare, 'Expected answer backward compatibility');
+    assert.strictEqual(res.data.production, res.data.production_tonnes, 'Expected production backward compatibility');
+    assert.strictEqual(res.data.input_metrics.N, 90);
+    assert.strictEqual(res.data.input_metrics.state, 'Punjab');
+  });
+
+  await test('POST /api/predict/recommend returns crop recommendation with confidence', async () => {
+    const res = await axios.post(`${BASE_URL}/predict/recommend`, {
+      N: 40,
+      P: 60,
+      K: 80,
+      temperature: 18.0,
+      humidity: 16.0,
+      ph: 7.2,
+      rainfall: 75.0
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.data.recommended_crop, 'Chickpea');
+    assert.ok(typeof res.data.confidence === 'number' && res.data.confidence > 0.8);
+  });
+
+  await test('POST /api/predict/crop with out-of-bounds pH rejects with 400 Bad Request', async () => {
+    try {
+      await axios.post(`${BASE_URL}/predict/crop`, {
+        N: 90,
+        P: 42,
+        K: 43,
+        temperature: 20.88,
+        humidity: 82.0,
+        ph: 16.0,
+        rainfall: 200,
+        selected_state: 'Punjab',
+        selected_district: 'Ludhiana',
+        selected_season: 'Kharif',
+        area: 10
+      });
+      assert.fail('Should have rejected pH > 14 with 400');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 400);
+      assert.ok(err.response.data?.error?.includes('Soil pH') || err.response.data?.details?.includes('Soil pH'));
+    }
+  });
+
+  await test('POST /api/predict/crop with negative nutrients rejects with 400 Bad Request', async () => {
+    try {
+      await axios.post(`${BASE_URL}/predict/crop`, {
+        N: -10,
+        P: 42,
+        K: 43,
+        temperature: 20,
+        humidity: 80,
+        ph: 6.5,
+        rainfall: 200,
+        selected_state: 'Punjab',
+        selected_district: 'Ludhiana',
+        selected_season: 'Kharif',
+        area: 10
+      });
+      assert.fail('Should have rejected negative N with 400');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 400);
+      assert.ok(err.response.data?.error?.includes('Nutrient metrics') || err.response.data?.details?.includes('Nutrient metrics'));
+    }
+  });
+
+  await test('POST /api/predict/crop with legacy payload (no soil) calculates yield for backward compatibility', async () => {
     const res = await axios.post(`${BASE_URL}/predict/crop`, {
       selected_state: 'Punjab',
       selected_district: 'Ludhiana',
@@ -80,6 +166,7 @@ async function runTests() {
       area: 100
     });
     assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.data.recommended_crop, 'Wheat');
     assert.ok(typeof res.data.answer === 'number', 'Expected numeric yield answer');
     assert.ok(typeof res.data.production === 'number', 'Expected numeric production');
   });
