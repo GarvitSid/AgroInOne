@@ -51,3 +51,30 @@ export const PredictCrop = async (inputData) => {
     throw error;
   }
 };
+
+export const RecommendCrop = async (inputData) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_BASE_URL}/predict/recommend`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(inputData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      const error = new Error(data?.error || 'Crop recommendation failed');
+      error.response = { data };
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Crop recommendation failed:', error.response?.data || error.message);
+    throw error;
+  }
+};

@@ -10,24 +10,124 @@ content {
 
 .form-container,
 .form-card {
-    background: #fff;
+    background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 1rem;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
 .h1-pred-crop {
     text-align: center;
     color: #1e293b;
+    font-weight: 700;
 }
 
 .form-label {
     font-weight: 600;
     color: #334155;
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+}
+
+/* Diagnostic Sections */
+.diagnostic-section {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.875rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.diagnostic-section:focus-within {
+    border-color: #cbd5e1;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.diagnostic-header {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.diagnostic-header h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.step-badge.geo {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.step-badge.soil {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.step-badge.climate {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.metric-hint {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+}
+
+.input-unit {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-color: #cbd5e1;
+}
+
+.quick-fill-btn {
+    border: 1px dashed #cbd5e1;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.85rem;
+    transition: all 0.15s ease;
+}
+
+.quick-fill-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+    border-color: #94a3b8;
+}
+
+.result-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
 }
 
 @media (max-width: 576px) {
     .form-card {
         padding: 1rem !important;
+    }
+    .diagnostic-section {
+        padding: 0.875rem;
     }
 }
