@@ -116,11 +116,134 @@ content {
     border-color: #94a3b8;
 }
 
-.result-card {
-    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
-    border: 1px solid #bbf7d0;
+/* Dual-Result Advisory Display */
+.advisory-wrapper {
+    margin-top: 2rem;
+    animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.advisory-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 1rem;
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
+    padding: 1.5rem;
+    height: 100%;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.advisory-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.advisory-card.recommender {
+    border-top: 5px solid #10b981;
+    background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 25%);
+}
+
+.advisory-card.forecaster {
+    border-top: 5px solid #3b82f6;
+    background: linear-gradient(180deg, #eff6ff 0%, #ffffff 25%);
+}
+
+.advisory-header-sub {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 0.25rem;
+}
+
+.crop-name-hero {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #065f46;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.metric-hero {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1.1;
+}
+
+.metric-unit {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.confidence-bar-container {
+    background-color: #e2e8f0;
+    border-radius: 9999px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.confidence-bar-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #10b981, #059669);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-pill {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.telemetry-summary-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.875rem;
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+}
+
+.telemetry-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 9999px;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.8rem;
+    color: #334155;
+    font-weight: 500;
+}
+
+.degradation-banner {
+    background: #fffbeb;
+    border: 1px solid #fef3c7;
+    border-left: 4px solid #f59e0b;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: #92400e;
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
 }
 
 @media (max-width: 576px) {
@@ -129,5 +252,11 @@ content {
     }
     .diagnostic-section {
         padding: 0.875rem;
+    }
+    .crop-name-hero {
+        font-size: 1.6rem;
+    }
+    .metric-hero {
+        font-size: 1.8rem;
     }
 }

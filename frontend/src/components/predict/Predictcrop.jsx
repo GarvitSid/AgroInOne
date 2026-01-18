@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './pred.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -10,7 +10,37 @@ import Badge from 'react-bootstrap/Badge';
 import { toast } from 'react-toastify';
 import { PredictCrop, getPredictCropOptions } from '../../api/predictcrop';
 
+const CROP_EMOJIS = {
+  Rice: '🌾',
+  Wheat: '🌾',
+  Maize: '🌽',
+  Chickpea: '🫘',
+  Gram: '🫘',
+  Kidneybeans: '🫘',
+  Pigeonpeas: '🫘',
+  Mothbeans: '🫘',
+  Mungbean: '🫘',
+  Blackgram: '🫘',
+  Lentil: '🫘',
+  Pomegranate: '🍎',
+  Banana: '🍌',
+  Mango: '🥭',
+  Grapes: '🍇',
+  Watermelon: '🍉',
+  Muskmelon: '🍈',
+  Apple: '🍎',
+  Orange: '🍊',
+  Papaya: '🍈',
+  Coconut: '🥥',
+  Cotton: '☁️',
+  Jute: '🌿',
+  Coffee: '☕',
+};
+
 export default function Predictcrop() {
+  const formRef = useRef(null);
+  const resultRef = useRef(null);
+
   // Section 1: Geographic & Logistics Parameters
   const [state, setState] = useState('');
   const [district, setDistrict] = useState('');
@@ -35,6 +65,7 @@ export default function Predictcrop() {
   const [legacyAns, setLegacyAns] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isManualOverride, setIsManualOverride] = useState(false);
 
   // Options vocabulary
   const [stateData, setStateData] = useState([]);
@@ -119,6 +150,7 @@ export default function Predictcrop() {
     setErrors({});
     setResultData(null);
     setLegacyAns('');
+    setIsManualOverride(false);
   };
 
   const validate = () => {
@@ -145,7 +177,6 @@ export default function Predictcrop() {
     const hasAnyClimate = temperature !== '' || humidity !== '' || rainfall !== '';
 
     if (hasAnySoil || hasAnyClimate || !cropOverride) {
-      // User is using the two-stage proactive recommender (or forgot required agronomics)
       if (nitrogen === '') newErrors.nitrogen = 'Nitrogen (N) is required';
       else if (isNaN(nitrogen) || Number(nitrogen) < 0) newErrors.nitrogen = 'N must be non-negative';
 
@@ -188,6 +219,7 @@ export default function Predictcrop() {
       setLoading(true);
       setResultData(null);
       setLegacyAns('');
+      setIsManualOverride(Boolean(cropOverride));
 
       const payload = {
         selected_state: state,
@@ -231,6 +263,13 @@ export default function Predictcrop() {
           ? `Advisory Complete: Recommended crop is ${response.recommended_crop}!`
           : 'Yield prediction complete'
       );
+
+      // Smooth scroll to results
+      setTimeout(() => {
+        if (resultRef.current) {
+          resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 150);
     } catch (error) {
       console.error('Crop prediction error:', error);
       const errMsg = error.response?.data?.error || error.message || 'Prediction failed. Please try again.';
@@ -241,18 +280,24 @@ export default function Predictcrop() {
     }
   };
 
+  const cropName = resultData?.recommended_crop || resultData?.prediction || cropOverride || 'Recommended Crop';
+  const cropEmoji = CROP_EMOJIS[cropName] || '🌱';
+  const confidencePercent = resultData?.confidence ? (resultData.confidence * 100).toFixed(1) : null;
+  const yieldValue = resultData?.yield_tonnes_per_hectare ?? resultData?.answer ?? null;
+  const productionValue = resultData?.production_tonnes ?? resultData?.production ?? null;
+
   return (
     <Container className="py-4">
       <Row className="justify-content-center">
         <Col xl={10} xxl={9}>
           <div className="text-center mb-4">
             <Badge bg="success" className="px-3 py-2 text-uppercase mb-2" style={{ letterSpacing: '0.05em' }}>
-              Proactive Two-Stage AI Advisory
+              Proactive Two-Stage AI Advisory System
             </Badge>
             <h1 className="h1-pred-crop mb-2">Crop Recommendation & Yield Advisory</h1>
             <p className="text-muted mx-auto" style={{ maxWidth: '640px' }}>
-              Enter farm logistics, soil chemistry telemetry, and climate data. Our chained ML pipeline classifies the optimal crop
-              for your land and forecasts anticipated yield and production.
+              Moving from a reactive calculator to an agronomic advisory platform. Enter your soil chemistry, weather conditions,
+              and land logistics to classify the optimal crop and forecast expected harvest production.
             </p>
             <div className="d-flex justify-content-center gap-2 mt-3">
               <button type="button" className="quick-fill-btn" onClick={handleFillSample} disabled={optionsLoading}>
@@ -264,7 +309,7 @@ export default function Predictcrop() {
             </div>
           </div>
 
-          <Card className="form-card p-4 p-md-5">
+          <Card className="form-card p-4 p-md-5" ref={formRef}>
             <form onSubmit={handleSubmit} noValidate>
               {/* SECTION 1: Geographic & Logistics Telemetry */}
               <div className="diagnostic-section">
@@ -362,7 +407,7 @@ export default function Predictcrop() {
 
                   <div className="col-12 form-group">
                     <label className="form-label" htmlFor="cropOverrideDropdown">
-                      Target Crop Override (Optional)
+                      Target Crop Mode
                     </label>
                     <select
                       className={`form-select ${errors.cropOverride ? 'is-invalid' : ''}`}
@@ -551,49 +596,119 @@ export default function Predictcrop() {
               </Button>
             </form>
 
-            {/* Result Display Area */}
+            {/* STEP 5: Dual-Result Visual Cards */}
             {resultData && (
-              <div className="mt-4 p-4 result-card">
-                <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 border-bottom pb-3 mb-3">
+              <div className="advisory-wrapper" ref={resultRef}>
+                <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
                   <div>
-                    <span className="text-uppercase text-muted fw-semibold small">Diagnostic Assessment</span>
-                    <h3 className="mb-0 text-success fw-bold">
-                      {resultData.recommended_crop || resultData.prediction || 'Yield Forecast Ready'}
-                    </h3>
+                    <Badge bg="success" className="me-2">✓ Analysis Complete</Badge>
+                    <span className="text-muted small">Generated on {new Date().toLocaleDateString()}</span>
                   </div>
-                  {resultData.confidence && (
-                    <Badge bg="success" className="fs-6 py-2 px-3">
-                      {(resultData.confidence * 100).toFixed(1)}% Match Confidence
-                    </Badge>
-                  )}
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-secondary"
+                    onClick={() => window.print()}
+                  >
+                    🖨️ Print / Save Advisory
+                  </button>
                 </div>
 
-                <div className="row g-3 text-center">
-                  <div className="col-md-6">
-                    <div className="p-3 bg-white rounded-3 border">
-                      <div className="text-muted small fw-semibold">Estimated Yield</div>
-                      <div className="fs-3 fw-bold text-dark">
-                        {resultData.yield_tonnes_per_hectare ?? resultData.answer ?? 'N/A'}{' '}
-                        <span className="fs-6 text-muted font-normal">t/ha</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="p-3 bg-white rounded-3 border">
-                      <div className="text-muted small fw-semibold">Total Projected Production</div>
-                      <div className="fs-3 fw-bold text-primary">
-                        {resultData.production_tonnes ?? resultData.production ?? 'N/A'}{' '}
-                        <span className="fs-6 text-muted font-normal">Tonnes</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {resultData.input_metrics && (
-                  <div className="mt-3 pt-3 border-top text-muted small">
-                    <strong>Analyzed Parameters:</strong> N: {resultData.input_metrics.N} kg/ha | P: {resultData.input_metrics.P} kg/ha | K: {resultData.input_metrics.K} kg/ha | pH: {resultData.input_metrics.ph} | Temp: {resultData.input_metrics.temperature}°C | Rain: {resultData.input_metrics.rainfall}mm | Location: {resultData.input_metrics.district}, {resultData.input_metrics.state} ({resultData.input_metrics.season})
+                {isManualOverride && (
+                  <div className="degradation-banner">
+                    <strong>ℹ️ Manual Crop Override Mode:</strong> The Stage 1 Recommender was bypassed because you selected a specific target crop. The Stage 2 Regressor estimated production specifically for <strong>{cropOverride}</strong>.
                   </div>
                 )}
+
+                <div className="row g-4">
+                  {/* CARD 1: Stage 1 Recommended Crop Classifier */}
+                  <div className="col-lg-6">
+                    <div className="advisory-card recommender">
+                      <div className="advisory-header-sub">Stage 1 • Agronomic Recommendation</div>
+                      <div className="crop-name-hero">
+                        <span>{cropEmoji}</span>
+                        <span>{cropName}</span>
+                      </div>
+
+                      {confidencePercent ? (
+                        <>
+                          <div className="d-flex justify-content-between align-items-center small text-muted">
+                            <span className="fw-semibold">Biochemical Suitability Match</span>
+                            <span className="fw-bold text-success">{confidencePercent}%</span>
+                          </div>
+                          <div className="confidence-bar-container">
+                            <div
+                              className="confidence-bar-fill"
+                              style={{ width: `${Math.min(Number(confidencePercent), 100)}%` }}
+                            />
+                          </div>
+                          <p className="text-muted small mb-0">
+                            Evaluated against 22 crop classes. Your soil chemistry (N:P:K ratio, pH {resultData.input_metrics?.ph ?? ph}) and ambient moisture provide peak vegetative & reproductive development conditions for {cropName}.
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-muted small mb-0">
+                          Target crop evaluated directly from historical Indian agricultural production modeling.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* CARD 2: Stage 2 Yield & Production Forecaster */}
+                  <div className="col-lg-6">
+                    <div className="advisory-card forecaster">
+                      <div className="advisory-header-sub">Stage 2 • Harvest Productivity Forecast</div>
+
+                      <div className="row g-2 mt-1">
+                        <div className="col-6">
+                          <div className="stat-pill">
+                            <div className="text-muted small fw-semibold">Estimated Yield</div>
+                            <div className="metric-hero">
+                              {yieldValue !== null ? yieldValue : 'N/A'}
+                            </div>
+                            <div className="metric-unit">Tonnes / Hectare</div>
+                          </div>
+                        </div>
+
+                        <div className="col-6">
+                          <div className="stat-pill">
+                            <div className="text-muted small fw-semibold">Total Production</div>
+                            <div className="metric-hero text-primary">
+                              {productionValue !== null ? productionValue : 'N/A'}
+                            </div>
+                            <div className="metric-unit">Total Tonnes ({area || resultData.input_metrics?.area || 1} ha)</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-muted small mt-3 mb-0">
+                        Forecasted based on {season || resultData.input_metrics?.season} season dynamics in {district || resultData.input_metrics?.district}, {state || resultData.input_metrics?.state}.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CARD 3: Telemetry Breakdown Matrix */}
+                <div className="telemetry-summary-card">
+                  <div className="fw-semibold small text-muted text-uppercase mb-2" style={{ letterSpacing: '0.04em' }}>
+                    Telemetry Audit Record
+                  </div>
+                  <div className="d-flex flex-wrap gap-2">
+                    <span className="telemetry-chip">📍 {district || resultData.input_metrics?.district}, {state || resultData.input_metrics?.state}</span>
+                    <span className="telemetry-chip">📅 {season || resultData.input_metrics?.season} ({year || resultData.input_metrics?.year})</span>
+                    <span className="telemetry-chip">📐 Area: {area || resultData.input_metrics?.area} ha</span>
+                    {resultData.input_metrics?.N !== undefined && (
+                      <>
+                        <span className="telemetry-chip">🧪 N: {resultData.input_metrics.N} kg/ha</span>
+                        <span className="telemetry-chip">🧪 P: {resultData.input_metrics.P} kg/ha</span>
+                        <span className="telemetry-chip">🧪 K: {resultData.input_metrics.K} kg/ha</span>
+                        <span className="telemetry-chip">🧪 pH: {resultData.input_metrics.ph}</span>
+                        <span className="telemetry-chip">🌡️ Temp: {resultData.input_metrics.temperature}°C</span>
+                        <span className="telemetry-chip">💧 Humidity: {resultData.input_metrics.humidity}%</span>
+                        <span className="telemetry-chip">🌧️ Rain: {resultData.input_metrics.rainfall} mm</span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
 
