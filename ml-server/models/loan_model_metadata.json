@@ -1,0 +1,68 @@
+{
+  "model_type": "RandomForestClassifier",
+  "best_params": {
+    "class_weight": "balanced",
+    "max_depth": 16,
+    "min_samples_leaf": 2,
+    "min_samples_split": 4,
+    "n_estimators": 100
+  },
+  "features": [
+    "Gender",
+    "Married",
+    "Dependents",
+    "Education",
+    "Self_Employed",
+    "Property_Area",
+    "Crop_Loss_Frequency",
+    "Borrowing_Source",
+    "ApplicantIncome",
+    "CoapplicantIncome",
+    "Total_Income",
+    "LoanAmount",
+    "Loan_Amount_Term",
+    "Credit_History",
+    "Land_Size_Acres",
+    "Input_Cost_per_Acre",
+    "Monthly_EMI",
+    "Debt_to_Income_Ratio",
+    "Net_Balance_Income",
+    "LoanAmount_log",
+    "Total_Income_log"
+  ],
+  "categorical_features": [
+    "Gender",
+    "Married",
+    "Dependents",
+    "Education",
+    "Self_Employed",
+    "Property_Area",
+    "Crop_Loss_Frequency",
+    "Borrowing_Source"
+  ],
+  "numeric_features": [
+    "ApplicantIncome",
+    "CoapplicantIncome",
+    "Total_Income",
+    "LoanAmount",
+    "Loan_Amount_Term",
+    "Credit_History",
+    "Land_Size_Acres",
+    "Input_Cost_per_Acre",
+    "Monthly_EMI",
+    "Debt_to_Income_Ratio",
+    "Net_Balance_Income",
+    "LoanAmount_log",
+    "Total_Income_log"
+  ],
+  "metrics": {
+    "accuracy": 0.9727,
+    "precision": 0.9725,
+    "recall": 0.9847,
+    "f1_score": 0.9786,
+    "roc_auc": 0.9972
+  },
+  "dataset_rows": 16506,
+  "train_rows": 13204,
+  "test_rows": 3302
+}
