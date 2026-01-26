@@ -204,6 +204,74 @@ async function runTests() {
     }
   });
 
+  // 3.5 Loan Credit & Financial Advisory AI (Feature 5)
+  await test('POST /api/predict/loan with low-risk profile returns approval, healthy DTI, and explainability factors', async () => {
+    const res = await axios.post(`${BASE_URL}/predict/loan`, {
+      gender: 'Male',
+      married: 'Yes',
+      dependent: '2',
+      education: 'Graduate',
+      self_emp: 'Yes',
+      income: 35000,
+      coap_income: 15000,
+      loan_amount: 150000,
+      loan_term: 60,
+      credit_history: 'No dues',
+      prop_area: 'Rural',
+      land_size: 4.0,
+      input_cost: 12000
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.data.approved, true, 'Expected loan approval for low-risk applicant');
+    assert.ok(typeof res.data.probability === 'number' && res.data.probability >= 0.70, 'Expected probability >= 0.70');
+    assert.strictEqual(res.data.risk_level, 'Low Risk');
+    assert.ok(res.data.financial_capacity, 'Expected financial_capacity object');
+    assert.ok(res.data.financial_capacity.dti_percentage < 35, 'Expected healthy DTI < 35%');
+    assert.ok(Array.isArray(res.data.influencing_factors) && res.data.influencing_factors.length > 0, 'Expected influencing factors');
+    assert.strictEqual(res.data.influencing_factors[0].impact, 'Positive');
+  });
+
+  await test('POST /api/predict/loan with high-risk profile returns rejection, high DTI, and fallback government schemes', async () => {
+    const res = await axios.post(`${BASE_URL}/predict/loan`, {
+      gender: 'Male',
+      married: 'No',
+      dependent: '3+',
+      education: 'Not Graduate',
+      self_emp: 'Yes',
+      income: 8000,
+      coap_income: 0,
+      loan_amount: 1500000,
+      loan_term: 36,
+      credit_history: 'Dues',
+      prop_area: 'Rural',
+      land_size: 1.5,
+      input_cost: 25000,
+      borrowing_source: 'Moneylender',
+      crop_loss_frequency: 'Frequent'
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.data.approved, false, 'Expected loan rejection for high-risk applicant');
+    assert.ok(typeof res.data.probability === 'number' && res.data.probability < 0.40, 'Expected low probability < 0.40');
+    assert.strictEqual(res.data.risk_level, 'High Risk');
+    assert.ok(res.data.financial_capacity.dti_percentage > 50, 'Expected high DTI > 50%');
+    assert.ok(Array.isArray(res.data.recommended_schemes) && res.data.recommended_schemes.length >= 2, 'Expected alternative government schemes');
+    const schemeNames = res.data.recommended_schemes.map(s => s.scheme_name);
+    assert.ok(schemeNames.some(s => s.includes('Kisan Credit Card') || s.includes('MUDRA') || s.includes('PMFBY')));
+  });
+
+  await test('POST /api/predict/loan with invalid negative inputs rejects with 400 Bad Request', async () => {
+    try {
+      await axios.post(`${BASE_URL}/predict/loan`, {
+        income: -5000,
+        loan_amount: 100000,
+        loan_term: 0
+      });
+      assert.fail('Should have rejected negative loan parameters with 400');
+    } catch (err) {
+      assert.strictEqual(err.response?.status, 400);
+    }
+  });
+
   // 4. Authentication & Security (L001 & L002)
   const testEmail = `test_user_${Date.now()}@example.com`;
 
