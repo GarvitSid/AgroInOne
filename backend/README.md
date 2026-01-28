@@ -30,7 +30,7 @@ flowchart LR
 - Forwarding client prediction requests to the decoupled Flask ML microservice:
   - `POST /api/predict/crop` $\longrightarrow$ `${ML_SERVER}/predict/crop` (Two-Stage advisory pipeline)
   - `POST /api/predict/recommend` $\longrightarrow$ `${ML_SERVER}/predict/recommend` (Standalone agronomic recommender)
-  - `POST /api/predict/loan` $\longrightarrow$ `${ML_SERVER}/predict/loan` (Credit risk classifier)
+  - `POST /api/predict/loan` $\longrightarrow$ `${ML_SERVER}/predict/loan` (Explainable loan eligibility & financial health advisory)
 - Preserves upstream HTTP status codes (`400 Bad Request`, `500 Server Error`) and surfaces structured error payloads.
 
 ### 2. Enterprise Authentication & Security

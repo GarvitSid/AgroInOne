@@ -4,8 +4,8 @@
 
 ## [Live Deployment](https://agroinone-main.onrender.com/)
 
-[![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](file:///c:/My%20Codes/Antigravity/AgroInOne/docs/progress-tracker.md)
-[![Tests](https://img.shields.io/badge/tests-26%20passed%20%2F%200%20failed-brightgreen.svg)](file:///c:/My%20Codes/Antigravity/AgroInOne/backend/test_suite.js)
+[![Version](https://img.shields.io/badge/version-0.4.0-blue.svg)](file:///c:/My%20Codes/Antigravity/AgroInOne/docs/progress-tracker.md)
+[![Tests](https://img.shields.io/badge/tests-29%20passed%20%2F%200%20failed-brightgreen.svg)](file:///c:/My%20Codes/Antigravity/AgroInOne/backend/test_suite.js)
 [![Architecture](https://img.shields.io/badge/ML%20Pipeline-Two--Stage%20Chained%20AI-orange.svg)](file:///c:/My%20Codes/Antigravity/AgroInOne/docs/crop-ml.md)
 ![Node.js](https://img.shields.io/badge/Node.js-Express%20v4.21-339933?logo=node.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)
@@ -98,8 +98,12 @@ In **`v0.3.0`**, AgroInOne moves to a **proactive agricultural advisory system**
 - Protected routes on both frontend (`ProtectedRoute`) and backend (`authMiddleware`).
 - Comprehensive error handling for duplicate accounts (`409 Conflict`), malformed headers, and token expiration (`TOKEN_EXPIRED`).
 
-### 🏦 Loan Approval Risk Modeling
-- Machine learning classifier evaluating creditworthiness based on 11 financial metrics (applicant/co-applicant income, loan amount, term, credit history, dependents).
+### 🏦 Loan Approval & Financial Health Advisory AI (Upgraded in v0.4.0)
+- **Hyperparameter-Tuned Random Forest Model** trained with 5-fold cross-validation on 16,506 empirical agrarian credit profiles and rural field surveys (97.27% accuracy, 0.9972 ROC-AUC).
+- **Dynamic Agrarian Financial Telemetry**: Calculates Debt-to-Income (DTI), amortized monthly EMI, monthly farm operating expense, net disposable income, and safe borrowing capacity.
+- **Explainable Underwriting Drivers**: Extracts and visualizes top positive, neutral, and negative driving factors for transparent loan decisions.
+- **Alternative Government Scheme Recommendations**: Automatically matches applicants with targeted safety nets (Kisan Credit Card 4% subsidized interest, PM MUDRA collateral-free loans, and PMFBY crop insurance).
+- **Modern Interactive Dashboard**: Benchmark quick-fills, animated probability meters, dynamic DTI health badges, and direct links to the schemes catalog.
 
 ---
 

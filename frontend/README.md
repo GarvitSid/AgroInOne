@@ -13,7 +13,7 @@ The React single-page frontend for the AgroInOne agricultural platform, powered 
 - **Proactive Agricultural Advisory Form**: 3-section diagnostic telemetry interface (Geographic & Logistics, Soil Health N-P-K & pH, Climate & Weather), Enter-key accessibility, one-click demo loader (`⚡ Fill Sample Telemetry`), real-time biological boundary checks, and dual visual cards for Model 1 recommendation and Model 2 yield forecasting.
 - **Government Schemes Browser**: Dynamic state-filtered catalog with national program fallbacks.
 - **Farmer Helpdesk Knowledge Base**: Live multi-lingual agricultural queries and contact directory.
-- **Loan Approval Predictor**: Credit risk applicant analysis interface.
+- **Loan Approval & Financial Health Advisory AI**: Modern agrarian underwriting interface with benchmark quick-fill presets, dynamic financial telemetry (Monthly EMI, Debt-to-Income DTI ratio, net cash flow surplus, safe credit limit), decision explainability factor cards, and tailored government scheme recommendations (KCC, MUDRA, PMFBY).
 - **User Authentication**: Secure JWT-backed login, registration modal, and protected routes.
 
 ## Development Scripts

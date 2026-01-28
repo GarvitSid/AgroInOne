@@ -246,6 +246,172 @@ content {
     margin-bottom: 1.25rem;
 }
 
+/* ==========================================================================
+   Loan Advisory Dashboard Styles (Feature 5)
+   ========================================================================== */
+.loan-result-container {
+    margin-top: 2rem;
+    animation: fadeInUp 0.4s ease-out;
+}
+
+.loan-verdict-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1.75rem;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    transition: all 0.2s ease;
+}
+
+.loan-verdict-card.approved {
+    border-top: 5px solid #10b981;
+    background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 30%);
+}
+
+.loan-verdict-card.rejected {
+    border-top: 5px solid #ef4444;
+    background: linear-gradient(180deg, #fef2f2 0%, #ffffff 30%);
+}
+
+.loan-verdict-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 0.25rem;
+}
+
+.loan-verdict-title.approved {
+    color: #065f46;
+}
+
+.loan-verdict-title.rejected {
+    color: #991b1b;
+}
+
+.loan-telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.loan-metric-tile {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.875rem;
+    padding: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+}
+
+.loan-metric-tile:hover {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.loan-metric-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    margin-bottom: 0.35rem;
+}
+
+.loan-metric-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.loan-metric-sub {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-top: 0.35rem;
+}
+
+.factor-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 1rem 1.15rem;
+    transition: transform 0.15s ease;
+}
+
+.factor-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.factor-card.positive {
+    border-left: 4px solid #10b981;
+}
+
+.factor-card.neutral {
+    border-left: 4px solid #f59e0b;
+}
+
+.factor-card.negative {
+    border-left: 4px solid #ef4444;
+}
+
+.scheme-card-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.875rem;
+    padding: 1.25rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+}
+
+.scheme-card-item:hover {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+}
+
+.scheme-benefit-badge {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1e40af;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    margin-bottom: 0.5rem;
+}
+
+.agrarian-toggle-btn {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.agrarian-toggle-btn:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
 @media (max-width: 576px) {
     .form-card {
         padding: 1rem !important;
@@ -258,5 +424,11 @@ content {
     }
     .metric-hero {
         font-size: 1.8rem;
+    }
+    .loan-verdict-title {
+        font-size: 1.35rem;
+    }
+    .loan-metric-value {
+        font-size: 1.35rem;
     }
 }
