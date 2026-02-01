@@ -86,23 +86,12 @@ export default function Profile() {
             <Row className="g-3">
               <Col md={4}>
                 <Card className="border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                  <h6 className="fw-bold text-success mb-2">Crop Yield AI</h6>
+                  <h6 className="fw-bold text-success mb-2">Crop Advisory & Yield AI</h6>
                   <p className="small text-muted mb-3">
-                    Forecast production yield by state, district, and crop variety using machine learning.
+                    Two-stage agronomic pipeline: recommend top suitable crops from soil & climate, then forecast harvest yield.
                   </p>
                   <Button as={Link} to="/predict/crop" variant="outline-success" size="sm" className="mt-auto rounded-pill fw-semibold">
-                    Predict Yield &rarr;
-                  </Button>
-                </Card>
-              </Col>
-              <Col md={4}>
-                <Card className="border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                  <h6 className="fw-bold text-success mb-2">Loan Assessment</h6>
-                  <p className="small text-muted mb-3">
-                    Evaluate agricultural loan eligibility and approval probabilities based on farm assets.
-                  </p>
-                  <Button as={Link} to="/predict/loan" variant="outline-success" size="sm" className="mt-auto rounded-pill fw-semibold">
-                    Assess Loan &rarr;
+                    Advisory & Yield &rarr;
                   </Button>
                 </Card>
               </Col>
@@ -114,6 +103,17 @@ export default function Profile() {
                   </p>
                   <Button as={Link} to="/schemes" variant="outline-success" size="sm" className="mt-auto rounded-pill fw-semibold">
                     Browse Schemes &rarr;
+                  </Button>
+                </Card>
+              </Col>
+              <Col md={4}>
+                <Card className="border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
+                  <h6 className="fw-bold text-success mb-2">Farmer Helpdesk</h6>
+                  <p className="small text-muted mb-3">
+                    Submit grievance tickets, track resolution status, and reach agricultural field support.
+                  </p>
+                  <Button as={Link} to="/helpdesk" variant="outline-success" size="sm" className="mt-auto rounded-pill fw-semibold">
+                    Go to Helpdesk &rarr;
                   </Button>
                 </Card>
               </Col>

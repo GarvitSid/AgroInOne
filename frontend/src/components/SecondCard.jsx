@@ -35,7 +35,7 @@ function SecondCard() {
             <Card.Body className="d-flex flex-column p-4">
               <Card.Title className="text-center">AI PREDICTIONS</Card.Title>
               <Card.Text className="card-below-text feature-preview flex-grow-1">
-                Estimate crop yields and assess loan approvals with machine learning models built for agriculture.
+                Get proactive crop recommendations based on soil nutrients and climate, paired with machine learning yield forecasts.
               </Card.Text>
               <Link to="/predict" className="mt-auto">
                 <Button variant="outline-success" className="w-100">Try Predictions</Button>

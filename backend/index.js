@@ -153,19 +153,6 @@ app.post('/api/predict/recommend', async (req, res) => {
   }
 });
 
-app.post('/api/predict/loan', async (req, res) => {
-  try {
-    const resp = await axios.post(`${ML_SERVER}/predict/loan`, req.body, {
-      headers: { 'Content-Type': 'application/json' }
-    });
-    res.json(resp.data);
-  } catch (err) {
-    console.error('Error proxying loan predict:', err.message);
-    const status = err.response ? err.response.status : 500;
-    const data = err.response ? err.response.data : { error: 'prediction error', details: err.message };
-    res.status(status).json(data);
-  }
-});
 
 // Example protected endpoint
 app.get('/api/me', authMiddleware, (req, res) => {

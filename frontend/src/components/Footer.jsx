@@ -24,9 +24,9 @@ export default function Footer() {
           <Col sm={6} lg={3}>
             <h6 className="text-white mb-3">Services</h6>
             <ul className="list-unstyled d-grid gap-2 mb-0">
-              <li><Link to="/predict/crop">Crop Yield AI</Link></li>
-              <li><Link to="/predict/loan">Loan Prediction AI</Link></li>
-              <li><Link to="/helpdesk">Helpdesk</Link></li>
+              <li><Link to="/predict/crop">Crop Advisory & Yield AI</Link></li>
+              <li><Link to="/schemes">Govt Schemes Explorer</Link></li>
+              <li><Link to="/helpdesk">Farmer Helpdesk</Link></li>
             </ul>
           </Col>
           <Col lg={3}>
