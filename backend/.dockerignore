@@ -1,0 +1,10 @@
+node_modules
+.env
+*.log
+npm-debug.log*
+.git
+.DS_Store
+Thumbs.db
+test_suite.js
+test_smoke.js
+test_integration.js

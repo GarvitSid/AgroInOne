@@ -1,6 +1,16 @@
 .venv/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 raw_crop_production.csv
 crop_data.csv
+Crop_recommendation.csv
+data/
+*.xlsx
 *.zip
+*.log
+.git
+train_*.py
+clean_*.py
+test_*.py

@@ -30,7 +30,6 @@ flowchart LR
 - Forwarding client prediction requests to the decoupled Flask ML microservice:
   - `POST /api/predict/crop` $\longrightarrow$ `${ML_SERVER}/predict/crop` (Two-Stage advisory pipeline)
   - `POST /api/predict/recommend` $\longrightarrow$ `${ML_SERVER}/predict/recommend` (Standalone agronomic recommender)
-  - `POST /api/predict/loan` $\longrightarrow$ `${ML_SERVER}/predict/loan` (Explainable loan eligibility & financial health advisory)
 - Preserves upstream HTTP status codes (`400 Bad Request`, `500 Server Error`) and surfaces structured error payloads.
 
 ### 2. Enterprise Authentication & Security
@@ -66,7 +65,6 @@ flowchart LR
 | `GET` | `/api/predict/options`| — | Retrieve vocabulary arrays (state, district, crop, season) |
 | `POST` | `/api/predict/crop` | — | Proxy to two-stage crop advisory & yield prediction |
 | `POST` | `/api/predict/recommend`| — | Proxy to isolated agronomic crop recommender |
-| `POST` | `/api/predict/loan` | — | Proxy to loan risk evaluation model |
 | `GET` | `/health`, `/api/health`| — | Health check endpoints |
 
 ---
@@ -144,4 +142,8 @@ npm run dev
 
 # Start production server
 npm start
+
+# Run in Docker container
+docker build -t agroinone-backend .
+docker run -p 5000:5000 --env-file .env agroinone-backend
 ```

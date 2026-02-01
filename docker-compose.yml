@@ -1,30 +1,44 @@
 version: '3.8'
 
 services:
+  # -------------------------------------------------------------------------
+  # 1. Frontend Client (React 18 / Vite SPA served via Nginx with SPA routing)
+  # -------------------------------------------------------------------------
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile.frontend
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http://backend:5000/api
+      - VITE_API_URL=/api
     depends_on:
       backend:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     networks:
       - agroinone-network
 
+  # -------------------------------------------------------------------------
+  # 2. Backend Gateway (Node.js / Express API Gateway & Authentication)
+  # -------------------------------------------------------------------------
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
+    env_file:
+      - ./backend/.env
     environment:
       - ML_SERVER_URL=http://ml:5001
-      - JWT_SECRET=supersecret
       - NODE_ENV=production
+      - PORT=5000
     depends_on:
       ml:
         condition: service_healthy
@@ -37,6 +51,9 @@ services:
     networks:
       - agroinone-network
 
+  # -------------------------------------------------------------------------
+  # 3. Machine Learning Microservice (Python Flask + Gunicorn Production WSGI)
+  # -------------------------------------------------------------------------
   ml:
     build:
       context: ./ml-server
@@ -45,15 +62,19 @@ services:
       - "5001:5001"
     environment:
       - FLASK_ENV=production
+      - FLASK_DEBUG=0
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5001/health')"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 15s
     networks:
       - agroinone-network
 
+# ---------------------------------------------------------------------------
+# Internal Bridge Network for Secure Inter-Container Communication
+# ---------------------------------------------------------------------------
 networks:
   agroinone-network:
     driver: bridge

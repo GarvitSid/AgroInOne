@@ -1,0 +1,12 @@
+.git
+.github
+node_modules
+archive
+docs
+logs
+scratch
+.venv
+*.log
+dist
+build
+repomix*

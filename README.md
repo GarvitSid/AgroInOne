@@ -1,11 +1,11 @@
 # 🌾 AgroInOne
 
-**A full-stack agricultural platform bringing proactive crop advisory, harvest yield forecasting, government schemes, financial risk modeling, and farmer support together in one unified ecosystem.**
+**A full-stack agricultural platform bringing proactive crop advisory, harvest yield forecasting, government schemes, and farmer support together in one unified ecosystem.**
 
 ## [Live Deployment](https://agroinone-main.onrender.com/)
 
 [![Version](https://img.shields.io/badge/version-0.4.0-blue.svg)](file:///c:/My%20Codes/Antigravity/AgroInOne/docs/progress-tracker.md)
-[![Tests](https://img.shields.io/badge/tests-29%20passed%20%2F%200%20failed-brightgreen.svg)](file:///c:/My%20Codes/Antigravity/AgroInOne/backend/test_suite.js)
+[![Tests](https://img.shields.io/badge/tests-26%20passed%20%2F%200%20failed-brightgreen.svg)](file:///c:/My%20Codes/Antigravity/AgroInOne/backend/test_suite.js)
 [![Architecture](https://img.shields.io/badge/ML%20Pipeline-Two--Stage%20Chained%20AI-orange.svg)](file:///c:/My%20Codes/Antigravity/AgroInOne/docs/crop-ml.md)
 ![Node.js](https://img.shields.io/badge/Node.js-Express%20v4.21-339933?logo=node.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)
@@ -25,7 +25,6 @@
   - [Government Schemes Directory](#-government-schemes-directory)
   - [Farmer Support Helpdesk](#-farmer-support-helpdesk)
   - [Authentication & Account Security](#-authentication--account-security)
-  - [Loan Approval Risk Modeling](#-loan-approval-risk-modeling)
 - [System Architecture](#system-architecture)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
@@ -97,14 +96,6 @@ In **`v0.3.0`**, AgroInOne moves to a **proactive agricultural advisory system**
 - Strict validation: email format, minimum 8 characters, number/special character requirements.
 - Protected routes on both frontend (`ProtectedRoute`) and backend (`authMiddleware`).
 - Comprehensive error handling for duplicate accounts (`409 Conflict`), malformed headers, and token expiration (`TOKEN_EXPIRED`).
-
-### 🏦 Loan Approval & Financial Health Advisory AI (Upgraded in v0.4.0)
-- **Hyperparameter-Tuned Random Forest Model** trained with 5-fold cross-validation on 16,506 empirical agrarian credit profiles and rural field surveys (97.27% accuracy, 0.9972 ROC-AUC).
-- **Dynamic Agrarian Financial Telemetry**: Calculates Debt-to-Income (DTI), amortized monthly EMI, monthly farm operating expense, net disposable income, and safe borrowing capacity.
-- **Explainable Underwriting Drivers**: Extracts and visualizes top positive, neutral, and negative driving factors for transparent loan decisions.
-- **Alternative Government Scheme Recommendations**: Automatically matches applicants with targeted safety nets (Kisan Credit Card 4% subsidized interest, PM MUDRA collateral-free loans, and PMFBY crop insurance).
-- **Modern Interactive Dashboard**: Benchmark quick-fills, animated probability meters, dynamic DTI health badges, and direct links to the schemes catalog.
-
 ---
 
 ## System Architecture
@@ -171,16 +162,16 @@ AgroInOne/
 │   ├── db.js                    # Supabase client, schemes/helpdesk table seeders
 │   ├── index.js                 # Express API server, reverse proxies, static SPA fallback
 │   ├── test_suite.js            # Automated Baseline Integration Test Suite (26 tests)
-│   ├── package.json             # Express dependencies (v0.3.0)
+│   ├── package.json             # Express dependencies (v0.4.0)
 │   └── data/                    # JSON data snapshots (govt_schemes.json, helpdesk_data.json, vocabularies)
 │
 ├── frontend/
-│   ├── package.json             # React 18 & Vite configuration (v0.3.0)
+│   ├── package.json             # React 18 & Vite configuration (v0.4.0)
 │   ├── vite.config.js           # Vite build config
 │   └── src/
-│       ├── api/                 # API clients (predictcrop, predictloan, schemes, helpdesk)
+│       ├── api/                 # API clients (predictcrop, schemes, helpdesk)
 │       ├── components/
-│       │   ├── predict/         # Predictcrop.jsx (3-part form + dual cards), pred.css, Predictloan.jsx
+│       │   ├── predict/         # Predictcrop.jsx (3-part form + dual cards), pred.css
 │       │   ├── Navbar.jsx       # App navigation header
 │       │   ├── Schemes.jsx      # Government schemes browser
 │       │   └── Helpdesk.jsx     # Farmer support directory
@@ -192,7 +183,6 @@ AgroInOne/
 │   ├── clean_data.py            # Cleans Kaggle dataset -> crop_data.csv + generates dropdown vocabularies
 │   ├── train_crop_recommender.py # Trains Stage 1 RandomForestClassifier (99.55% accuracy)
 │   ├── train_crop_model.py      # Trains Stage 2 RandomForestRegressor (historical yield forecaster)
-│   ├── train_loan_model.py      # Trains loan risk assessment classifier
 │   ├── Crop_recommendation.csv  # 2,200 agronomic soil/climate samples (22 crops)
 │   ├── crop_data.csv            # Cleaned Indian agricultural district production records (124 crops)
 │   ├── models/                  # Serialized .joblib model binaries and label encoders
@@ -288,9 +278,6 @@ python train_crop_recommender.py
 
 # 3. Train Stage 2 Harvest Forecaster (Model 2 Regressor)
 python train_crop_model.py
-
-# 4. Train Loan Risk Classifier
-python train_loan_model.py
 ```
 
 ### Running Locally
@@ -330,7 +317,6 @@ Visit **`http://localhost:5000`** (or `http://localhost:5173`).
 | `GET` | `/api/predict/options`| — | Get synchronized vocabulary arrays for State, District, Crop, Season |
 | `POST` | `/api/predict/crop` | — | **Two-Stage Chained ML Pipeline**: Ingests 11 soil, climate & logistics metrics; returns dual recommendation & yield forecast |
 | `POST` | `/api/predict/recommend`| — | **Standalone Recommender**: Ingests 7 soil/climate metrics; returns optimal crop & confidence |
-| `POST` | `/api/predict/loan` | — | Predicts credit approval probability for loan applicants |
 | `GET` | `/health`, `/api/health`| — | Service health check |
 
 ### Flask ML Microservice — `http://localhost:5001`
@@ -339,7 +325,6 @@ Visit **`http://localhost:5000`** (or `http://localhost:5173`).
 | :--- | :--- | :--- |
 | `POST` | `/predict/crop` | Primary two-stage pipeline: Model 1 Classifier $\longrightarrow$ Canonical Mapping Bridge $\longrightarrow$ Model 2 Regressor. Returns `{ recommended_crop, confidence, yield_tonnes_per_hectare, production_tonnes, input_metrics }`. Supports legacy single-stage fallback. |
 | `POST` | `/predict/recommend` | Standalone agronomic classifier returning recommended crop and confidence score from soil & weather telemetry. |
-| `POST` | `/predict/loan` | Loan classification model returning approval status and confidence probability. |
 | `GET` | `/health` | Microservice liveness and health endpoint. |
 
 ---
@@ -412,18 +397,39 @@ npm start
 
 ## Docker & Containerization
 
-The repository includes multi-container orchestration definitions via `docker-compose.yml`:
+The repository includes enterprise multi-container orchestration definitions via `docker-compose.yml`:
 
 ```bash
 # Build and start all services in detached mode
 docker-compose up --build -d
 
-# Verify health status
+# Verify service health status
 docker-compose ps
+
+# View unified application logs
+docker-compose logs -f
 ```
 
-The ML server includes a production Dockerfile running with `gunicorn` as a non-privileged user:
+### Architecture in Docker
+1. **Frontend (`:3000`)**: Multi-stage production build (`node:18-alpine` builder $\rightarrow$ `nginx:alpine`). Nginx serves optimized SPA assets with client-side routing fallback (`try_files $uri $uri/ /index.html;`) and reverse-proxies `/api/` calls directly to the backend container without CORS issues.
+2. **Backend Gateway (`:5000`)**: Lightweight `node:18-alpine` container running Express. Automatically ingests Supabase credentials from `./backend/.env`, runs cryptographic JWT authentication, and reverse-proxies ML prediction requests.
+3. **ML Microservice (`:5001`)**: Hardened `python:3.10-slim` container running `gunicorn` (multi-threaded production WSGI) under an unprivileged user (`appuser`). Pre-loads scikit-learn models (crop recommender and yield forecaster) for zero-latency inference.
+
+### Standalone Container Builds
+Each microservice can also be built and run independently:
+
 ```bash
+# 1. Frontend Client
+cd frontend
+docker build -t agroinone-frontend .
+docker run -p 3000:3000 agroinone-frontend
+
+# 2. Backend Gateway
+cd backend
+docker build -t agroinone-backend .
+docker run -p 5000:5000 --env-file .env agroinone-backend
+
+# 3. ML Microservice
 cd ml-server
 docker build -t agroinone-ml .
 docker run -p 5001:5001 agroinone-ml
