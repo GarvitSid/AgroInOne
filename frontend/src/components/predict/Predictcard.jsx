@@ -19,7 +19,7 @@ export default function Predictcard() {
           <div className="postcard__subtitle small"></div>
           <div className="postcard__bar"></div>
           <div className="postcard__preview-txt">
-            Crop yield prediction and agro-climatic advisory is a crucial aspect of agriculture and plays a significant role in food security and farm economics. By utilizing machine learning across soil nutrients, environmental parameters, and historical production data, it recommends the top suitable crops and forecasts yield (in Quintals/Acre) to help farmers make informed, high-yield decisions.
+            Crop yield prediction and agro-climatic advisory is a crucial aspect of agriculture and plays a significant role in food security and farm economics. By utilizing machine learning across soil nutrients, environmental parameters, and historical production data, it recommends the top suitable crops and forecasts yield (in Tonnes/Hectare) to help farmers make informed, high-yield decisions.
           </div>
           <ul className="postcard__tagbox">
             <li className="tag__item play blue">

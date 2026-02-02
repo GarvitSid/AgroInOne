@@ -1,113 +1,112 @@
 [
-    {
-      "id": 1,
-      "title": "Crop Insurance Support",
-      "description": "Assistance with understanding and applying for crop insurance schemes.",
-      "contact": {
-        "phone": "1800-123-4567",
-        "email": "cropinsurance@agrihelp.gov.in"
-      },
-      "links": "https://www.agrihelp.gov.in/crop-insurance",
-      "state": "All India"
+  {
+    "id": 1,
+    "title": "Crop Insurance Support (PMFBY)",
+    "description": "Assistance with understanding, enrollment, and claims for the Pradhan Mantri Fasal Bima Yojana.",
+    "contact": {
+      "phone": "1800-180-1551",
+      "email": "help.pmfby@gov.in"
     },
-    {
-      "id": 2,
-      "title": "Subsidies for Fertilizers",
-      "description": "Information on subsidies available for purchasing fertilizers.",
-      "contact": {
-        "phone": "1800-234-5678",
-        "email": "fertilizers@agrihelp.gov.in"
-      },
-      "links": "https://www.agrihelp.gov.in/fertilizer-subsidies",
-      "state": "Punjab"
+    "links": "https://pmfby.gov.in",
+    "state": "All India"
+  },
+  {
+    "id": 2,
+    "title": "Subsidies for Fertilizers & Nutrient Management",
+    "description": "Information on Direct Benefit Transfer (DBT) subsidies available for agricultural fertilizers.",
+    "contact": {
+      "phone": "1800-180-1551",
+      "email": "fert-dbt@nic.in"
     },
-    {
-      "id": 3,
-      "title": "Pest Control Solutions",
-      "description": "Guidance on effective pest control methods and resources.",
-      "contact": {
-        "phone": "1800-345-6789",
-        "email": "pestcontrol@agrihelp.gov.in"
-      },
-      "links": "https://www.agrihelp.gov.in/pest-control",
-      "state": "Delhi"
+    "links": "https://www.fert.nic.in",
+    "state": "Punjab"
+  },
+  {
+    "id": 3,
+    "title": "Pest & Disease Advisory Solutions",
+    "description": "Official guidance on integrated pest management (IPM), bio-pesticides, and locust control.",
+    "contact": {
+      "phone": "1800-180-1551",
+      "email": "ppqs@nic.in"
     },
-    {
-      "id": 4,
-      "title": "Government Schemes for Farmers",
-      "description": "Overview of various government schemes available for farmers.",
-      "contact": {
-        "phone": "1800-456-7890",
-        "email": "schemes@agrihelp.gov.in"
-      },
-      "links": "https://www.agrihelp.gov.in/government-schemes",
-      "state": "Haryana"
+    "links": "https://ppqs.gov.in",
+    "state": "Delhi"
+  },
+  {
+    "id": 4,
+    "title": "Kisan Credit & Central Agricultural Schemes",
+    "description": "Comprehensive portal for Kisan Credit Card (KCC), PM-KISAN, and central support programs.",
+    "contact": {
+      "phone": "1800-180-1551",
+      "email": "agricoop@nic.in"
     },
-    {
-      "id": 5,
-      "title": "Soil Health Management",
-      "description": "Support and resources for managing soil health and fertility.",
-      "contact": {
-        "phone": "1800-567-8901",
-        "email": "soilhealth@agrihelp.gov.in"
-      },
-      "links": "https://www.agrihelp.gov.in/soil-health",
-      "state": "Odisha"
+    "links": "https://agricoop.gov.in",
+    "state": "Haryana"
+  },
+  {
+    "id": 5,
+    "title": "Soil Health Card & Soil Management",
+    "description": "Access soil test results, nutrient status reports, and dosage recommendations for your farm.",
+    "contact": {
+      "phone": "1800-180-1551",
+      "email": "soil-health@gov.in"
     },
-    {
-      "id": 6,
-      "title": "Farm Machinery Assistance",
-      "description": "Information on subsidies and support for purchasing farm machinery.",
-      "contact": {
-        "phone": "1800-678-9012",
-        "email": "machinery@agrihelp.gov.in"
-      },
-      "links": "https://www.agrihelp.gov.in/farm-machinery",
-      "state": "Bihar"
+    "links": "https://soilhealth.dac.gov.in",
+    "state": "Odisha"
+  },
+  {
+    "id": 6,
+    "title": "Farm Machinery Assistance (SMAM Portal)",
+    "description": "Subsidies for farm mechanization, tractors, harvesters, and custom hiring centers.",
+    "contact": {
+      "phone": "1800-180-1551",
+      "email": "agri-machinery@gov.in"
     },
-    {
-      "id": 7,
-      "title": "Water Management Techniques",
-      "description": "Guidance on efficient water management practices for agriculture.",
-      "contact": {
-        "phone": "1800-789-0123",
-        "email": "watermanagement@agrihelp.gov.in"
-      },
-      "links": "https://www.agrihelp.gov.in/water-management",
-      "state": "Jharkhand"
+    "links": "https://agrimachinery.nic.in",
+    "state": "Bihar"
+  },
+  {
+    "id": 7,
+    "title": "Micro Irrigation & Water Management (PMKSY)",
+    "description": "Guidance on drip and sprinkler irrigation subsidies under Per Drop More Crop.",
+    "contact": {
+      "phone": "1800-180-1551",
+      "email": "pmksy-mowr@nic.in"
     },
-    {
-      "id": 8,
-      "title": "Organic Farming Resources",
-      "description": "Resources and support for transitioning to organic farming practices.",
-      "contact": {
-        "phone": "1800-890-1234",
-        "email": "organicfarming@agrihelp.gov.in"
-      },
-      "links": "https://www.agrihelp.gov.in/organic-farming",
-      "state": "Himachal Pradesh"
+    "links": "https://pmksy.gov.in",
+    "state": "Jharkhand"
+  },
+  {
+    "id": 8,
+    "title": "Jaivik Kheti & Organic Farming Portal",
+    "description": "E-commerce and knowledge platform for certified organic inputs, techniques, and buyers.",
+    "contact": {
+      "phone": "1800-180-1551",
+      "email": "support@jaivikkheti.in"
     },
-    {
-      "id": 9,
-      "title": "Drought Relief Measures",
-      "description": "Information on relief measures available during drought conditions.",
-      "contact": {
-        "phone": "1800-901-2345",
-        "email": "droughtrelief@agrihelp.gov.in"
-      },
-      "links": "https://www.agrihelp.gov.in/drought-relief",
-      "state": "Madhya Pradesh"
+    "links": "https://www.jaivikkheti.in",
+    "state": "Himachal Pradesh"
+  },
+  {
+    "id": 9,
+    "title": "Drought Relief & Contingency Planning",
+    "description": "State and national relief measures, seed contingency reserves, and drought advisories.",
+    "contact": {
+      "phone": "1800-180-1551",
+      "email": "disaster-relief@gov.in"
     },
-    {
-      "id": 10,
-      "title": "Farmer Training Programs",
-      "description": "Details about training programs for improving farming skills and knowledge.",
-      "contact": {
-        "phone": "1800-012-3456",
-        "email": "training@agrihelp.gov.in"
-      },
-      "links": "https://www.agrihelp.gov.in/farmer-training",
-      "state": "Rajasthan"
-    }
-  ]
-  
+    "links": "https://agricoop.gov.in",
+    "state": "Madhya Pradesh"
+  },
+  {
+    "id": 10,
+    "title": "National Farmer Training & Extension (MANAGE)",
+    "description": "Capacity building workshops, agricultural skill development, and agri-clinic training programs.",
+    "contact": {
+      "phone": "1800-180-1551",
+      "email": "helpline@manage.gov.in"
+    },
+    "links": "https://www.manage.gov.in",
+    "state": "Rajasthan"
+  }
+]

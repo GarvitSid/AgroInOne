@@ -12,7 +12,7 @@ The React single-page frontend for the AgroInOne agricultural platform, powered 
 ## Features
 - **Proactive Agricultural Advisory Form**: 3-section diagnostic telemetry interface (Geographic & Logistics, Soil Health N-P-K & pH, Climate & Weather), Enter-key accessibility, one-click demo loader (`⚡ Fill Sample Telemetry`), real-time biological boundary checks, and dual visual cards for Model 1 recommendation and Model 2 yield forecasting.
 - **Government Schemes Browser**: Dynamic state-filtered catalog with national program fallbacks.
-- **Farmer Helpdesk Knowledge Base**: Agricultural support articles, grievance tickets, and contact directory.
+- **Farmer Helpdesk Knowledge Base**: Searchable agricultural advisory articles and official helpline/portal directory.
 - **User Authentication**: Secure JWT-backed login, registration modal, and protected routes.
 
 ## Development Scripts

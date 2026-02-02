@@ -93,13 +93,6 @@ if (-Not (Test-Path $frontendDir)){
         Write-Host "npm install failed in frontend:" -ForegroundColor Red
         Write-Host $_.Exception.Message -ForegroundColor Red
         Pop-Location
-        exit 1
-    }
-    # ensure react-scripts exists (common CRA issue)
-    $hasReactScripts = & npm ls react-scripts --depth=0 2>$null
-    if ($LASTEXITCODE -ne 0){
-        Write-Host "react-scripts not detected; installing react-scripts --save-dev" -ForegroundColor Yellow
-        & npm install --save-dev react-scripts
     }
     Pop-Location
 }
@@ -155,16 +148,23 @@ if ($start -match '^[Yy]'){
 }
 
 header "8) Quick API test snippets (PowerShell)"
-Write-Host "Example: POST order using Invoke-RestMethod (replace YOUR_JWT_TOKEN):" -ForegroundColor Green
+Write-Host "Example: POST two-stage crop advisory using Invoke-RestMethod:" -ForegroundColor Green
 Write-Host @"
-`$token = 'YOUR_JWT_TOKEN'
 `$body = @{
-  items = @(@{ productId = 1; qty = 2 })
-  address = "123 Main St"
-  phone = "9999999999"
+  N = 90
+  P = 42
+  K = 43
+  temperature = 20.88
+  humidity = 82.0
+  ph = 6.5
+  rainfall = 202.94
+  selected_state = 'Punjab'
+  selected_district = 'Ludhiana'
+  selected_season = 'Kharif'
+  crop_year = 2024
+  area = 10
 } | ConvertTo-Json -Depth 5
-Invoke-RestMethod -Uri 'http://localhost:5000/api/orders' -Method Post `
-    -Headers @{ Authorization = "Bearer `$token" } `
+Invoke-RestMethod -Uri 'http://localhost:5000/api/predict/crop' -Method Post `
     -Body `$body -ContentType 'application/json'
 "@
 

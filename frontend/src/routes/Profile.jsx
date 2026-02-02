@@ -110,7 +110,7 @@ export default function Profile() {
                 <Card className="border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
                   <h6 className="fw-bold text-success mb-2">Farmer Helpdesk</h6>
                   <p className="small text-muted mb-3">
-                    Submit grievance tickets, track resolution status, and reach agricultural field support.
+                    Search agricultural knowledge base articles, official helpline directories, and government contacts.
                   </p>
                   <Button as={Link} to="/helpdesk" variant="outline-success" size="sm" className="mt-auto rounded-pill fw-semibold">
                     Go to Helpdesk &rarr;
